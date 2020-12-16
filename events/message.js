@@ -129,7 +129,8 @@ if (!prefix) {
               "!"
           );
         } else {
-          if (!client.levelUpChannel.get(message.guild.id) == "disabled") {
+          if (!client.levelUpChannel.get(message.guild.id) == "disabled" && message.guild.channels.cache
+              .get(client.levelUpChannel.get(message.guild.id)) != undefined) {
             message.guild.channels.cache
               .get(client.levelUpChannel.get(message.guild.id))
               .send(

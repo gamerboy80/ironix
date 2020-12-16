@@ -9,52 +9,70 @@ exports.run = (client, message, args) => {
           description: "Level up channel prepared/changed succesfully!",
           footer: {
             text: `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
-            icon_url: message.author.displayAvatarURL()
-          }
-        }
+            icon_url: message.author.displayAvatarURL(),
+          },
+        },
       });
     } else {
-      if(args[0] == "dms") {
+      if (args[0] == "dms") {
         client.levelUpChannel.set(message.guild.id, "dms");
-      message.channel.send({
-        embed: {
-          color: 0x51c878,
-          description: "Level up channel prepared/changed succesfully!",
-          footer: {
-            text: `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
-            icon_url: message.author.displayAvatarURL()
-          }
-        }
-      });
+        message.channel.send({
+          embed: {
+            color: 0x51c878,
+            description: "Level up channel prepared/changed succesfully!",
+            footer: {
+              text: `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
+              icon_url: message.author.displayAvatarURL(),
+            },
+          },
+        });
       } else {
-      if(args[0] != null || client.levelUpChannel.get(message.guild.id) == "" || client.levelUpChannel.get(message.guild.id) == undefined) {
-      message.channel.send({
-        embed: {
-          color: 0xc85151,
-          description:
-            "Invalid syntax | CORRECT SYNTAX: " +
-            prefix +
-            "levelUpChannel [channel mention / dms / disabled]",
-          footer: {
-            text: `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
-            icon_url: message.author.displayAvatarURL()
+        if (args[0] == "disabled") {
+          client.levelUpChannel.set(message.guild.id, "disabled");
+          message.channel.send({
+            embed: {
+              color: 0x51c878,
+              description: "Level up channel prepared/changed succesfully!",
+              footer: {
+                text: `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
+                icon_url: message.author.displayAvatarURL(),
+              },
+            },
+          });
+        } else {
+          if (
+            args[0] != null ||
+            client.levelUpChannel.get(message.guild.id) == "" ||
+            client.levelUpChannel.get(message.guild.id) == undefined
+          ) {
+            message.channel.send({
+              embed: {
+                color: 0xc85151,
+                description:
+                  "Invalid syntax | CORRECT SYNTAX: " +
+                  prefix +
+                  "levelUpChannel [channel mention / dms / disabled]",
+                footer: {
+                  text: `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
+                  icon_url: message.author.displayAvatarURL(),
+                },
+              },
+            });
+          } else {
+            client.levelUpChannel.set(message.guild.id, "");
+            message.channel.send({
+              embed: {
+                color: 0x51c878,
+                description: "Level up channel restored succesfully!",
+                footer: {
+                  text: `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
+                  icon_url: message.author.displayAvatarURL(),
+                },
+              },
+            });
           }
         }
-      });
-    } else {
-      client.levelUpChannel.set(message.guild.id, "");
-      message.channel.send({
-        embed: {
-          color: 0x51c878,
-          description: "Level up channel deleted succesfully!",
-          footer: {
-            text: `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
-            icon_url: message.author.displayAvatarURL()
-          }
-        }
-      });
-    }
-    }
+      }
     }
   } else {
     message.channel.send({
@@ -64,9 +82,9 @@ exports.run = (client, message, args) => {
           "You need ``Manage Guild`` permission for using this command.",
         footer: {
           text: `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
-          icon_url: message.author.displayAvatarURL()
-        }
-      }
+          icon_url: message.author.displayAvatarURL(),
+        },
+      },
     });
   }
 };
