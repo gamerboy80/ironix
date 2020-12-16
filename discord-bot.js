@@ -287,7 +287,7 @@ client.moderation = [
 ];
 
 client.wasFiltered = null;
-client.version = "1.0 RC4";
+client.version = "1.0 RC5 🎉";
 
 fs.readdir("./events/", (err, files) => {
   if (err) return console.error(err);
