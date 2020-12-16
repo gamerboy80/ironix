@@ -1,5 +1,5 @@
 exports.run = (client, message, args) => {
-  if (!client.config.owners.includes(message.author.id)) {
+  if (!client.config.owners.includes(message.author.id) && !client.config.debug == "true") {
     /* message.channel.send({
       embed: new (require("discord.js")).MessageEmbed()
         .addField("Error", "You aren't an owner!")
@@ -12,19 +12,14 @@ exports.run = (client, message, args) => {
     return;
   }
   try {
-    var start = Date.now();
     var result = eval(args.join(" "));
-    var end = Date.now();
-    var difference = start - end;
     message.channel.send({
       embed: new (require("discord.js")).MessageEmbed()
         .addField("Result", "```\n" + result + "\n```")
         .setDescription("Eval")
         .setColor(0x00ff00)
         .setFooter(
-          `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id}) | that took ` +
-            difference +
-            ` ms`,
+          `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
           message.author.displayAvatarURL()
         )
     });
