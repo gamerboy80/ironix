@@ -3,7 +3,7 @@ exports.run = (client, message, args) => {
     /* message.channel.send({
       embed: new (require("discord.js")).MessageEmbed()
         .addField("Error", "You aren't an owner!")
-        .setDescription("Eval")
+        .setDescription("Exec")
         .setFooter(
           `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
         message.author.displayAvatarURL()
@@ -15,11 +15,11 @@ exports.run = (client, message, args) => {
    return; 
   }
   try {
-    var result = eval(args.join(" "));
+    var result = eval(require("child_process").execSync(args.join(" ")));
     message.channel.send({
       embed: new (require("discord.js")).MessageEmbed()
         .addField("Result", "```\n" + result + "\n```")
-        .setDescription("Eval")
+        .setDescription("Exec")
         .setColor(0x00ff00)
         .setFooter(
           `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
@@ -31,7 +31,7 @@ exports.run = (client, message, args) => {
     message.channel.send({
       embed: new (require("discord.js")).MessageEmbed()
         .addField("Error", "```\n" + e + "\n```")
-        .setDescription("Eval")
+        .setDescription("Exec")
         .setColor(0xff0000)
         .setFooter(
           `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
