@@ -153,7 +153,7 @@ app.get("/leaderboard*", (req, res) => {
         user.neededXp +
         `</h3>`;
     });
-    res.status(200).send(htmlStart + leaderboardPage + htmlEnd);
+    res.send(htmlStart + leaderboardPage + htmlEnd);
   } else {
     var htmlStart = getHtmlStart("Ironix - Error 404");
     res.status(404).send(
@@ -169,11 +169,11 @@ app.get("/leaderboard*", (req, res) => {
 });
 
 app.get("/", (req, res) => {
-  res.status(200).sendFile(__dirname + "/public/index.html");
+  res.sendFile(__dirname + "/public/index.html");
 });
 
 app.get("/features*", (req, res) => {
-  res.status(200).sendFile(__dirname + "/public/features.html");
+  res.sendFile(__dirname + "/public/features.html");
 });
 
 app.get("/invite*", (req, res) => {
@@ -253,7 +253,7 @@ client.rank = [
 client.memberscount = ["memberscount"];
 client.poll = ["poll"];
 client.suggest = ["suggest"];
-client.animals = ["bird", "cat", "dog", "fox"];
+client.animals = ["bird", "cat", "dog", "fox", "pig"];
 client.rps = ["rps"];
 client.minesweeper = ["minesweeper"];
 client.meme = ["meme"];
@@ -267,12 +267,14 @@ client.fun = [
   "meme",
   "minesweeper",
   "rps",
+  "pig",
 ];
 client.bird = ["bird"];
 client.cat = ["cat"];
 client.dog = ["dog"];
 client.fox = ["fox"];
 client.warn = ["warn"];
+client.pig = ["pig"];
 client.moderation = [
   "kick",
   "permban",
@@ -287,7 +289,7 @@ client.moderation = [
 ];
 
 client.wasFiltered = null;
-client.version = "1.0.1";
+client.version = "1.1";
 
 fs.readdir("./events/", (err, files) => {
   if (err) return console.error(err);

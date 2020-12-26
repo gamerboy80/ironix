@@ -24,7 +24,3 @@ exports.run = (client, message, args) => {
 };
 
 exports.category = "Utility";
-/*      embed.setFooter(
-        `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
-        message.author.displayAvatarURL()
-      );*/

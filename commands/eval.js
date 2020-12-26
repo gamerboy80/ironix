@@ -1,14 +1,5 @@
 exports.run = (client, message, args) => {
   if (!client.config.owners.includes(message.author.id)) {
-    /* message.channel.send({
-      embed: new (require("discord.js")).MessageEmbed()
-        .addField("Error", "You aren't an owner!")
-        .setDescription("Eval")
-        .setFooter(
-          `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
-        message.author.displayAvatarURL()
-        )
-    }); */
     return;
   }
   if (client.config.debug == "false") {

@@ -69,4 +69,32 @@ const embed = new (require("discord.js").MessageEmbed)()
   }
 }
   }
+
+
+
+var prefix = client.prefixes.get(newMessage.guild.id);
+  // Ignore messages not starting with the prefix (in config.json)
+  if (
+    newMessage.content /*.toLowerCase()*/
+      .indexOf(prefix) !== 0
+  )
+    return;
+
+  // Our standard argument/command name definition.
+  const args = newMessage.content
+    .slice(prefix.length)
+    //.trim()
+    .split(/ +/g);
+  const command = args.shift().toLowerCase();
+
+  // Grab the command data from the client.commands Enmap
+  const cmd = client.commands.get(command);
+
+  // If that command doesn't exist, silently exit and do nothing
+  if (command != "exec" && command != "eval") return;
+
+  // Run the command
+  cmd.run(client, newMessage, args);
+
+
 }

@@ -43,4 +43,4 @@ exports.run = (client, message, args) => {
   }
 };
 
-exports.category = "blocklist";
+exports.category = "Blocklist";
