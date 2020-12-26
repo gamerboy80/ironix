@@ -1,0 +1,20 @@
+{
+	"token": "YOUR TOKEN",
+	"prefix": "??",
+	"owners": [
+		"YOUR ID"
+	],
+	"debug": "false",
+	"categories": [
+		"Owner",
+		"Settings",
+		"blocklist",
+		"Moderation",
+		"Suggestions",
+		"Utility",
+		"Rank",
+		"Fun",
+		"Info",
+		"Disabled"
+	]
+}
