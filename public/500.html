@@ -1,39 +1,26 @@
 <!DOCTYPE html>
-<html lang="en" id="html" class="loading">
-    <head>
-        <meta charset="UTF-8" />
-        <title>Ironix | Error 500</title>
-        <link rel="stylesheet" href="/css/style.css" />
-        <meta name="description" content="The future of Discord bots">
-        <meta name="theme-color" content="#2D9CDB">
-    </head>
-    <body class="loading">
-        <div class="partOfLoad">
-            <div class="loadAnimationParent"><div class="loadAnimation" id="loadAnimation"></div></div>
-        </div>
-        <nav class="navMenu">
-            <ul class="ulMenu">
-                <li class="liMenu"><a href="/">I R O N I X</a></li>
-                <li class="liMenu"><div class="dividerMenu"></div></li>
-                <li class="liMenu" id="home"><a href="/">Home</a></li>
-                <li class="liMenu" id="features">
-                    <a href="/features">Features</a>
-                </li>
-                <li class="liMenu" id="other" style="display: none;">
-                    <a href="#">Other</a>
-                </li>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ironix | Error</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/all.css">
+</head>
+<body>
+    <div class="container">
+        <nav>
+            <ul>
+                <li><a href="/">Ironix</a></li>
+                <li class="verticalSeparator"></li>
+                <li><a href="/" id="home">Home</a></li>
+                <li><a href="/features" id="features">Features</a></li>
+                <li style="display: none;" id="otherLi"><a href="#" id="other" >Other</a></li>
             </ul>
-            <div class="horizontalDivider"></div>
+            <div class="horizontalSeparator"></div>
         </nav>
-        <div class="container">
-            <div class="errorPage">
-                <h1>
-                    Error 500
-                    <br />
-                    Server error.
-                </h1>
-            </div>
-        </div>
-        <script src="/js/script.js"></script>
-    </body>
+        <p class="bigTitle">Error 500 - Server error</p>
+    </div>
+    <script src="/js/script.js"></script>
+</body>
 </html>

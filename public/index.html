@@ -1,33 +1,36 @@
 <!DOCTYPE html>
-<html lang="en" id="html" class="loading">
-    <head>
-        <meta charset="UTF-8" />
-        <title>Ironix | Home</title>
-        <link rel="stylesheet" href="/css/style.css" />
-        <meta name="description" content="The future of Discord bots">
-        <meta name="theme-color" content="#2D9CDB">
-    </head>
-    <body class="loading">
-        <div class="partOfLoad">
-            <div class="loadAnimationParent"><div class="loadAnimation" id="loadAnimation"></div></div>
-        </div>
-        <div class="homeBackground">
-        <nav class="navMenu">
-            <ul class="ulMenu">
-                <li class="liMenu homePage"><a href="/">I R O N I X</a></li>
-                <li class="liMenu"><div class="dividerMenu homePage"></div></li>
-                <div class="fixerHp"></div>
-                <li class="liMenu homePage" id="home"><a href="/">Home</a></li>
-                <li class="liMenu homePage" id="features"><a href="/features">Features</a></li>
-                <li class="liMenu homePage" id="other" style="display: none;"><a href="#">Other</a></li>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ironix | Home</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/all.css">
+</head>
+<body>
+    <div class="container">
+        <nav>
+            <ul>
+                <li><a href="/">Ironix</a></li>
+                <li class="verticalSeparator"></li>
+                <li><a href="/" id="home">Home</a></li>
+                <li><a href="/features" id="features">Features</a></li>
+                <li style="display: none;" id="otherLi"><a href="#" id="other" >Other</a></li>
             </ul>
+            <div class="horizontalSeparator"></div>
         </nav>
-        <div class="container">
-            <p class="title">Ironix - The future of Discord bots</p>
-            <div class="inviteButtonContainer"><a href="/invite" class="inviteButton"><img src="/assets/invite.svg"><span>INVITE TO YOUR SERVER</span></a></div>
-            <p class ="description">Ironix is an user-friendly bot that will help you moderate your server, have fun and a lot more things for <b>free</b>.</p>
+        <p class="bigTitle">Ironix</p>
+        <p class="bigTitle">The future of Discord bots</p>
+        <p class="bigDescription">Ironix is an user-friendly bot that will help you moderate your server, have fun and a lot more things for <b>free</b>.</p>
+        <p class="commandExamples" id="commandExamples">&nbsp;</p>
+        <div class="buttons">
+            <a href="https://discord.gg/QdkFsz7rDZ" class="button discordButton">Invite</a>
         </div>
+        <div class="socialButtons">
+            <a href="https://github.com/SapphireVideos/ironix"><i class="fab fa-github"></i></a>
+            <a href="https://twitter.com/IronixTeam"><i class="fab fa-twitter"></i></a>
         </div>
-        <script src="/js/script.js"></script>
-    </body>
+    </div>
+    <script src="/js/script.js"></script>
+</body>
 </html>

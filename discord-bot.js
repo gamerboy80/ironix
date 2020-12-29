@@ -24,38 +24,33 @@ app.use(express.static(__dirname + "/public/"));
 function getHtmlStart(webTitle) {
   return (
     `<!DOCTYPE html>
-    <html lang="en" id="html" class="loading">
-    <head>
+<html lang="en">
+<head>
     <meta charset="UTF-8">
-    <title>` +
-    webTitle +
-    `</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>`+ webTitle + `</title>
     <link rel="stylesheet" href="/css/style.css">
-    <meta name="description" content="The future of Discord bots">
-    <meta name="theme-color" content="#2D9CDB">
-    </head>
-    <body class="loading">
-    <div class="partOfLoad">
-    <div class="loadAnimationParent"><div class="loadAnimation" id="loadAnimation"></div></div>
-    </div>
-    <nav class="navMenu">
-    <ul class="ulMenu">
-    <li class="liMenu"><a href="/">I R O N I X</a></li>
-    <li class="liMenu"><div class="dividerMenu"></div></li>
-    <li class="liMenu" id="home"><a href="/">Home</a></li>
-    <li class="liMenu" id="features"><a href="/features">Features</a></li>
-    <li class="liMenu" id="other" style="display: none;"><a href="#">Other</a></li>
-    </ul>
-    <div class="horizontalDivider"></div>
-    </nav>
+    <link rel="stylesheet" href="/css/all.css">
+</head>
+<body>
     <div class="container">
+        <nav>
+            <ul>
+                <li><a href="/">Ironix</a></li>
+                <li class="verticalSeparator"></li>
+                <li><a href="/" id="home">Home</a></li>
+                <li><a href="/features" id="features">Features</a></li>
+                <li style="display: none;" id="otherLi"><a href="#" id="other" >Other</a></li>
+            </ul>
+            <div class="horizontalSeparator"></div>
+        </nav>
     `
   );
 }
 var htmlEnd = `</div>
-  <script src="/js/script.js"></script>
-  </body>
-  </html>`;
+    <script src="/js/script.js"></script>
+</body>
+</html>`;
 
 app.get("/leaderboard*", (req, res) => {
   function kFormatter(num) {
@@ -126,7 +121,7 @@ app.get("/leaderboard*", (req, res) => {
     var membersObject = Object.fromEntries(membersObjectPre);
 
     var leaderboardPage =
-      `<h1 class="leaderboardTitle">` +
+      `<div class="marginedContainer"><h1 class="leaderboardTitle">` +
       client.guilds.cache.get(guildId).name +
       ` - Leaderboard</h1>`;
 
@@ -153,16 +148,12 @@ app.get("/leaderboard*", (req, res) => {
         user.neededXp +
         `</h3>`;
     });
-    res.send(htmlStart + leaderboardPage + htmlEnd);
+    res.send(htmlStart + leaderboardPage + "</div>" + htmlEnd);
   } else {
-    var htmlStart = getHtmlStart("Ironix - Error 404");
+    var htmlStart = getHtmlStart("Ironix | Error");
     res.status(404).send(
       htmlStart +
-        `<div class="errorPage">
-      <h1>Error 404
-      <br>
-      Guild not found.</h1>
-      </div>` +
+        `<p class="bigTitle">Error 404 - Guild not found</p>` +
         htmlEnd
     );
   }
@@ -289,7 +280,7 @@ client.moderation = [
 ];
 
 client.wasFiltered = null;
-client.version = "1.1";
+client.version = "1.2";
 
 fs.readdir("./events/", (err, files) => {
   if (err) return console.error(err);
