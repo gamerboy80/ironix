@@ -1,12 +1,9 @@
 # Ironix
-Ironix source code. It is in release candidate. Expect minor bugs.
+Ironix source code.
 ## How to start
 1. Rename config.example.json to config.json, add your token to the new config.json and add your user ID.
 2. Run npm install.
 3. Run npm start, bot should start.
-
-## Warning
-This bot is in release candidate and so it can have some problems. If possible, please contribute to the project via issues or pull requests.
 
 ## Known issues
 None
