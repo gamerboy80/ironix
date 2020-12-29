@@ -1,5 +1,5 @@
 const discord = require("discord.js");
-const client = new discord.Client();
+const client = new discord.Client({ fetchAllMembers: true });
 const enmap = require("enmap"); 
 client.config = require("./config.json");
 const needle = require("needle");
@@ -280,7 +280,7 @@ client.moderation = [
 ];
 
 client.wasFiltered = null;
-client.version = "1.2";
+client.version = "1.2.1";
 
 fs.readdir("./events/", (err, files) => {
   if (err) return console.error(err);
