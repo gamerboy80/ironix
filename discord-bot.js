@@ -173,6 +173,10 @@ app.get("/invite*", (req, res) => {
   );
 });
 
+app.get("/ultra-secret-easter-egg-surprised-ironix-face*", (req, res) => {
+  res.sendFile(__dirname + "/public/game.html");
+});
+
 app.get("*", (req, res) => {
   res.status(404).sendFile(__dirname + "/public/404.html");
 });

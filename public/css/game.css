@@ -1,0 +1,13 @@
+.ironixLogo {
+	border-radius: 100%;
+}
+.ironixLogo:active {
+	opacity: 90%;
+}
+body {
+	text-align: center;
+}
+.points {
+	font-family: 'Arial';
+	font-size: 30px;
+}

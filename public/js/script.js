@@ -64,3 +64,8 @@ if(window.location.pathname == "/") {
 	document.getElementById('other').classList.add('active');
 	document.getElementById('otherLi').style.display = "inline-block";
 }
+window.addEventListener("keypress", (key) => {
+	if(key.key == "+") {
+		window.open("/ultra-secret-easter-egg-surprised-ironix-face");
+	}
+});
