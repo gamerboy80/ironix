@@ -136,9 +136,9 @@ app.get("/leaderboard*", (req, res) => {
         leaderboardPage +
         `<h3 class="leaderboardItem"><img class="avatar" src="` +
         avatarUrl +
-        `"><username>` +
+        `"><p class="usernameLeaderboard">` +
         user.username +
-        `</username>: RANK: #` +
+        `</p>: RANK: #` +
         user.rank +
         ` | LEVEL: ` +
         user.level +
@@ -280,7 +280,7 @@ client.moderation = [
 ];
 
 client.wasFiltered = null;
-client.version = "1.2.1";
+client.version = "1.2.2";
 
 fs.readdir("./events/", (err, files) => {
   if (err) return console.error(err);
