@@ -60,27 +60,33 @@ exports.run = (client, message, args) => {
         }
       } else {
         message.channel.send({
-          embed: {
-            color: 0xc85151,
-            description: "User not found.",
-            footer: {
-              text: `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
-              icon_url: message.author.displayAvatarURL(),
+            embed: {
+              color: 0xc85151,
+              description:
+                "Invalid syntax | CORRECT SYNTAX: " +
+                prefix +
+                "warnings [user]",
+              footer: {
+                text: `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
+                icon_url: message.author.displayAvatarURL(),
+              },
             },
-          },
-        });
+          });
       }
     } else {
       message.channel.send({
-        embed: {
-          color: 0xc85151,
-          description: "User not found.",
-          footer: {
-            text: `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
-            icon_url: message.author.displayAvatarURL(),
-          },
-        },
-      });
+            embed: {
+              color: 0xc85151,
+              description:
+                "Invalid syntax | CORRECT SYNTAX: " +
+                prefix +
+                "warnings [user]",
+              footer: {
+                text: `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
+                icon_url: message.author.displayAvatarURL(),
+              },
+            },
+          });
     }
   }
 };

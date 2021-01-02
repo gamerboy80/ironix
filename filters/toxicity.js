@@ -10,10 +10,21 @@ exports.run = (client, message, args) => {
   const limit = client.toxicLimit.get(message.guild.id) || 0.8;
 
   (async () => {
-    const toxicity = (await perspective.analyze(args.join(" "))).attributeScores
+    let toxicity;
+    let toxicityB;
+
+    try {
+     toxicity = (await perspective.analyze(args.join(" "))).attributeScores
       .TOXICITY.summaryScore.value;
-      const toxicityB = (await perspective.analyze(args.join(" ").split("").reverse().join(""))).attributeScores
+    } catch {
+
+    }
+    try {
+      toxicityB = (await perspective.analyze(args.join(" ").split("").reverse().join(""))).attributeScores
       .TOXICITY.summaryScore.value;
+    } catch {
+
+    }
 
     if(toxicity > limit || toxicityB > limit) {
       message.guild.channels.cache.get(client.inspection.get(message.guild.id)).send({
