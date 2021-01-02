@@ -1,4 +1,9 @@
-var optionsListPre = ["help", "disable", "enable", "functions", "levelUpChannel", "resetPrefix", "setPrefix", "setupLogs", "setupSuggest", "addBlocklist", "emptyBlocklist", "removeBlocklist", "showBlocklist", "ban", "kick", "mute", "purge", "unBan", "unMute", "warn", "warnings", "approve", "deny", "suggest", "covid", "faq", "leave", "membersCount", "ping", "poll", "addLevelUpRole", "blockXP", "leaderboard", "rank", "rankColour", "removeLevelUpRole", "showBlockedXP", "showLevelUpRoles", "unBlockXP", "bird", "cat", "dog", "fox", "meme", "minesweeper", "rps", "credits", "help", "info", "uptime"];
+var optionsListPre = [];
+
+fetch(window.location.origin + "/get-commands-list").then((response) => { response.text().then(r => {
+	
+optionsListPre = r.split(",");
+
 var optionsList = [];
 
 optionsListPre.forEach((e, i) => {
@@ -68,4 +73,7 @@ window.addEventListener("keypress", (key) => {
 	if(key.key == "+") {
 		window.open("/ultra-secret-easter-egg-surprised-ironix-face");
 	}
+});
+
+});
 });

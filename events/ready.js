@@ -67,12 +67,12 @@ module.exports = (client) => {
         client.channels.forEach(channel => {
           if (channel.manageable) {
             if (channel.type === "text") {
-              channel.overwritePermissions(muteRole, {
+              channel.createOverwrite(muteRole, {
                 VIEW_CHANNEL: true,
                 SEND_MESSAGES: false
               });
             } else {
-              channel.overwritePermissions(muteRole, {
+              channel.createOverwrite(muteRole, {
                 VIEW_CHANNEL: true,
                 SPEAK: false
               });

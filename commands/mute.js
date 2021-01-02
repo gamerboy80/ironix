@@ -6,25 +6,26 @@ exports.run = (client, message, args) => {
         if (message.guild.roles.cache.find((r) => r.name == "Muted-IX") == null) {
           message.guild
             .roles.create({
-              name: "Muted-IX",
-              color: "GRAY",
+              data: {
+                name: "Muted-IX",
+                color: "GRAY",
+            }
             })
             .then((role) => {
               const muteRole = role;
-              message.guild.setRolePosition(
-                muteRole,
+              muteRole.setPosition(
                 message.guild.roles.cache.find((r) => r.name == "Ironix").position - 1
               );
               message.guild.channels.cache.forEach((channel) => {
                 if (channel.manageable) {
                   if (channel.type === "text") {
-                    channel.overwritePermissions(muteRole, {
+                    channel.createOverwrite(muteRole, {
                       SEND_MESSAGES: false,
                       ADD_REACTIONS: false,
                     });
                   } else {
                     if (channel.type === "voice") {
-                      channel.overwritePermissions(muteRole, {
+                      channel.createOverwrite(muteRole, {
                         SPEAK: false,
                       });
                     }

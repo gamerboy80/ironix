@@ -1,5 +1,6 @@
 {
 	"token": "YOUR TOKEN",
+	"perspective": "PERSPECTIVE API KEY",
 	"prefix": "??",
 	"owners": [
 		"YOUR ID"

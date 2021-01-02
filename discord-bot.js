@@ -176,6 +176,18 @@ app.get("/invite*", (req, res) => {
 app.get("/ultra-secret-easter-egg-surprised-ironix-face*", (req, res) => {
   res.sendFile(__dirname + "/public/game.html");
 });
+app.get("/get-commands-list*", (req, res) => {
+  const commandsList = [];
+  fs.readdir("./commands/", (err, files) => {
+    if (err) return console.error(err);
+    files.forEach((file) => {
+      if (!file.endsWith(".js")) return;
+      let commandName = file.split(".")[0];
+      commandsList.push(commandName);
+    });
+    res.send(commandsList.toString());
+  });
+});
 
 app.get("*", (req, res) => {
   res.status(404).sendFile(__dirname + "/public/404.html");
@@ -203,6 +215,9 @@ client.disabledFunctions = new enmap({ name: "disabledFunctions" });
 client.patest = new enmap({ name: "patest" });
 client.warns = new enmap({ name: "warns" });
 client.leveluproles = new enmap({ name: "leveluproles" });
+client.inspection = new enmap({ name: "inspection" });
+client.toxicLimit = new enmap({ name: "toxicLimit" });
+client.notAnalyze = new enmap({ name: "notAnalyze" });
 client.tADisabled = [
   "blocklist",
   "kick",
@@ -282,9 +297,10 @@ client.moderation = [
   "warn",
   "warnings",
 ];
+client.toxicity = ["toxicity"];
 
 client.wasFiltered = null;
-client.version = "1.2.2";
+client.version = "1.3 beta";
 
 fs.readdir("./events/", (err, files) => {
   if (err) return console.error(err);
@@ -325,25 +341,26 @@ client.on("guildCreate", async (guild) => {
   if (guild.roles.cache.find((r) => r.name === "Muted-IX") == null) {
     guild
       .roles.create({
-        name: "Muted-IX",
-        color: "GRAY",
+        data: {
+          name: "Muted-IX",
+          color: "GRAY",
+      }
       })
       .then((role) => {
         const muteRole = role;
-        guild.setRolePosition(
-          muteRole,
+        muteRole.setPosition(
           guild.roles.cache.find((r) => r.name == "Ironix").position - 1
         );
         guild.channels.cache.forEach((channel) => {
           if (channel.manageable) {
             if (channel.type === "text") {
-              channel.overwritePermissions(muteRole, {
+              channel.createOverwrite(muteRole, {
                 SEND_MESSAGES: false,
                 ADD_REACTIONS: false,
               });
             } else {
               if (channel.type === "voice") {
-                channel.overwritePermissions(muteRole, {
+                channel.createOverwrite(muteRole, {
                   SPEAK: false,
                 });
               }
@@ -359,13 +376,13 @@ client.on("channelCreate", (channel) => {
     var role = channel.guild.roles.cache.find((r) => r.name === "Muted-IX");
     if (channel.manageable) {
       if (channel.type === "text") {
-        channel.overwritePermissions(role, {
+        channel.createOverwrite(role, {
           SEND_MESSAGES: false,
           ADD_REACTIONS: false,
         });
       } else {
         if (channel.type === "voice") {
-          channel.overwritePermissions(role, {
+          channel.createOverwrite(role, {
             SPEAK: false,
           });
         }
