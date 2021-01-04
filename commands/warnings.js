@@ -88,6 +88,18 @@ exports.run = (client, message, args) => {
             },
           });
     }
+  } else {
+    message.channel.send({
+      embed: {
+        color: 0xc85151,
+        description:
+          "You need ``Kick Members`` permission for using this command.",
+        footer: {
+          text: `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
+          icon_url: message.author.displayAvatarURL()
+        }
+      }
+    });
   }
 };
 

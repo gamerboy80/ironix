@@ -31,9 +31,9 @@ exports.run = (client, message, args) => {
       embed: {
         color: 0x51c878,
         description:
-          "Is this message toxic? | Wait for the bot to add both reactions before reacting or you will have to unmute manually. `" + message.content + "`",
+          "Is this message toxic? `" + message.content + "`\nIronix detected a posibility of " + ((isToxicityBigger(toxicity, toxicityB)) ? ((toxicity * 100) + "%") : ((toxicityB * 100) + "%")),
         footer: {
-          text: `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
+          text: `Message by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
           icon_url: message.author.displayAvatarURL()
         }
       }
@@ -69,3 +69,18 @@ exports.run = (client, message, args) => {
 }
 }
 };
+
+function isToxicityBigger(a, b) {
+  if (a == undefined) { 
+    return false;
+  }
+  if (b == undefined) {
+    return true;
+  }
+  if (a > b) {
+    return true;
+  }
+  if (b > a) {
+    return false;
+  }
+}

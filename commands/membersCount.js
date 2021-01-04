@@ -11,13 +11,12 @@ exports.run = (client, message, args) => {
       embed: {
         color: 0x51c878,
         description:
-          "There are " +
+          "Humans: " +
           membersEB +
-          " members in this server excluding bots, " +
-          membersIB +
-          " including bots and " +
+          "\n Bots: " +
           membersENB +
-          " bots",
+          "\n Total: " +
+          membersIB,
         footer: {
           text: `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
           icon_url: message.author.displayAvatarURL(),
