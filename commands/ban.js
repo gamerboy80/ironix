@@ -60,7 +60,7 @@ exports.run = (client, message, args) => {
                     pre.push(user.id);
                     client.bans.set(message.guild.id, pre);
                   }
-
+                  try {
                   client.users.fetch(user.id).then((usera) => {
                     usera
                       .createDM()
@@ -81,6 +81,7 @@ exports.run = (client, message, args) => {
                         )
                       );
                   });
+                } catch {}
 
                   message.guild.members.cache.get(user.id).ban({ reason: reason });
 
@@ -130,7 +131,7 @@ exports.run = (client, message, args) => {
                       pre.push(user.id);
                       client.bans.set(message.guild.id, pre);
                     }
-
+                    try {
                     client.users.fetch(user.id).then((usera) => {
                       usera
                         .createDM()
@@ -144,6 +145,7 @@ exports.run = (client, message, args) => {
                           )
                         );
                     });
+                  } catch {}
 
                     message.guild.members.cache.get(user.id).ban({ reason: reason });
 

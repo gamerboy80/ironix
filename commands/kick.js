@@ -27,6 +27,7 @@ exports.run = (client, message, args) => {
           const messageReady = preMessageReady.join(" ");
           if (message.guild.members.cache.get(user.id).kickable) {
             if (messageReady != "") {
+              try {
               client.users.fetch(user.id).then(usera => {
                 usera
                   .createDM()
@@ -46,6 +47,7 @@ exports.run = (client, message, args) => {
                     message.guild.members.cache.get(user.id).kick();
                   });
               });
+            } catch {}
 
               message.channel.send({
                 embed: {

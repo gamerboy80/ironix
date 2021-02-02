@@ -45,6 +45,7 @@ exports.run = (client, message, args) => {
             
             message.guild.members.cache.get(user.id).roles.remove(muteRole.id);
 
+try {
             client.users.fetch(user.id).then(usera => {
               usera
                 .createDM()
@@ -57,6 +58,7 @@ exports.run = (client, message, args) => {
                   )
                 );
             });
+          } catch {}
 
             message.channel.send({
               embed: {

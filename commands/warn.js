@@ -47,6 +47,8 @@ exports.run = (client, message, args) => {
 
               client.warns.set(message.guild.id, thing, user.id);
 
+
+try {
               client.users.fetch(user.id).then((usera) => {
                 usera
                   .createDM()
@@ -60,6 +62,7 @@ exports.run = (client, message, args) => {
                     )
                   );
               });
+            } catch {}
 
               message.channel.send({
                 embed: {
