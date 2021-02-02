@@ -6,6 +6,8 @@
 }
 body {
 	text-align: center;
+	color: white;
+	background: #2C2F33;
 }
 .points {
 	font-family: 'Arial';

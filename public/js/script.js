@@ -1,4 +1,7 @@
-var optionsListPre = [];
+if(window.location.pathname == "/") {
+	document.getElementById('home').classList.add('active');
+
+	var optionsListPre = [];
 
 fetch(window.location.origin + "/get-commands-list").then((response) => { response.text().then(r => {
 	
@@ -56,13 +59,23 @@ setInterval(() => {
 		typeDelete();
 	}
 	if(typing == 0) {
+		document.getElementById("commandExamples").innerHTML = "";
 		typeBack();
 	}
 }, 500)
 
+setInterval(() => {
+	if(document.getElementById("lineThingy").innerHTML == "|") {
+		document.getElementById("lineThingy").innerHTML = "&nbsp;";
+	} else {
+		document.getElementById("lineThingy").innerHTML = "|";
+	}
+}, 600)
 
-if(window.location.pathname == "/") {
-	document.getElementById('home').classList.add('active');
+
+});
+});
+
 } else if(window.location.pathname == "/features") {
 	document.getElementById('features').classList.add('active');
 } else {
@@ -73,7 +86,4 @@ window.addEventListener("keypress", (key) => {
 	if(key.key == "+") {
 		window.open("/ultra-secret-easter-egg-surprised-ironix-face");
 	}
-});
-
-});
 });

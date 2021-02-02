@@ -1,6 +1,7 @@
 {
 	"token": "YOUR TOKEN",
 	"perspective": "PERSPECTIVE API KEY",
+	"websiteDomain": "https://website.domain",
 	"prefix": "??",
 	"owners": [
 		"YOUR ID"

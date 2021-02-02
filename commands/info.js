@@ -3,7 +3,7 @@ exports.run = (client, message, args) => {
     .setTitle("Bot Info")
     .addField("Version", client.version)
     .addField("Library", "Discord.JS 12")
-    .addField("Invite", "https://ironix.emeraldvideos.ga/invite")
+    .addField("Invite", client.config.websiteDomain + "/invite")
     .addField("Contact us", "Ironix@outlook.com.ar")
     .setFooter(
       `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,

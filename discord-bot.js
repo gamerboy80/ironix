@@ -1,11 +1,10 @@
 const discord = require("discord.js");
-const client = new discord.Client({ fetchAllMembers: true });
+const client = new discord.Client({ fetchAllMembers: true, ws: { properties: { $browser: "Discord iOS" } } });
 const enmap = require("enmap"); 
 client.config = require("./config.json");
 const needle = require("needle");
 const fs = require("fs");
 var clone = require("lodash.clonedeep");
-const oauth = new (require("discord-oauth2"))();
 
 // LEADERBOARD START
 
@@ -300,7 +299,7 @@ client.moderation = [
 client.toxicity = ["toxicity"];
 
 client.wasFiltered = null;
-client.version = "1.4";
+client.version = "1.5";
 
 fs.readdir("./events/", (err, files) => {
   if (err) return console.error(err);
