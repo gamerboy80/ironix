@@ -20,6 +20,7 @@ module.exports = (client) => {
     });
   });*/
 
+  client.usersOnCountdown.clear();
   console.log("Bot logged in.");
   client.user.setActivity("@Ironix help - " + client.version, { type: "PLAYING" });
   require("needle").post(

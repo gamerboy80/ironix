@@ -217,6 +217,7 @@ client.leveluproles = new enmap({ name: "leveluproles" });
 client.inspection = new enmap({ name: "inspection" });
 client.toxicLimit = new enmap({ name: "toxicLimit" });
 client.notAnalyze = new enmap({ name: "notAnalyze" });
+client.usersOnCountdown = new enmap({ name: "usersOnCountdown" });
 client.tADisabled = [
   "blocklist",
   "kick",
@@ -299,7 +300,7 @@ client.moderation = [
 client.toxicity = ["toxicity"];
 
 client.wasFiltered = null;
-client.version = "1.6.1";
+client.version = "1.6.2";
 
 fs.readdir("./events/", (err, files) => {
   if (err) return console.error(err);

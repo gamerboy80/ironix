@@ -223,6 +223,8 @@ var needed = (Math.round(Math.pow(rankData.level, 2) / 10) + 2) * 10;
   if (!cmd) return;
 
   // Run the command
+  if(!Array.from(client.usersOnCountdown.keys()).includes(message.author.id)) {
+client.usersOnCountdown.set(message.author.id);
   if(Array.isArray(cmd.neededPerms)) {
         cmd.neededPerms.forEach(perm => {
           if(message.guild.members.cache.get(client.user.id).hasPermission(perm)) {
@@ -244,4 +246,8 @@ var needed = (Math.round(Math.pow(rankData.level, 2) / 10) + 2) * 10;
     } else {
       cmd.run(client, message, args);
     }
+    setTimeout(() => {
+      client.usersOnCountdown.delete(message.author.id);
+    }, 1000);
+  }
 };
