@@ -189,7 +189,15 @@ var needed = (Math.round(Math.pow(rankData.level, 2) / 10) + 2) * 10;
         if (!file.endsWith(".js")) return;
         let filterName = file.split(".")[0];
         let args = message.content.split(/ +/g);
-        client.filters.get(filterName).run(client, message, args);
+        if(Array.isArray(client.filters.get(filterName).neededPerms)) {
+        client.filters.get(filterName).neededPerms.forEach(perm => {
+          if(message.guild.members.cache.get(client.user.id).hasPermission(perm)) {
+            client.filters.get(filterName).run(client, message, args);
+          }
+        });
+    } else {
+      client.filters.get(filterName).run(client, message, args);
+    }
       });
     });
   }
@@ -215,5 +223,25 @@ var needed = (Math.round(Math.pow(rankData.level, 2) / 10) + 2) * 10;
   if (!cmd) return;
 
   // Run the command
-  cmd.run(client, message, args);
+  if(Array.isArray(cmd.neededPerms)) {
+        cmd.neededPerms.forEach(perm => {
+          if(message.guild.members.cache.get(client.user.id).hasPermission(perm)) {
+            cmd.run(client, message, args);
+          } else {
+            message.channel.send({
+        embed: {
+          color: 0xc85151,
+          description: "Missing permissions: ``" + cmd.neededPerms.join(", ") + "``.",
+          footer: {
+            text: `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
+            icon_url: message.author.displayAvatarURL()
+          }
+        }
+      });
+            throw {};
+          }
+        });
+    } else {
+      cmd.run(client, message, args);
+    }
 };

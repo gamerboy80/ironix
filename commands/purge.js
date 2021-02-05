@@ -78,3 +78,4 @@ exports.run = async (client, message, args) => {
 };
 
 exports.category = "Moderation";
+exports.neededPerms = ["MANAGE_MESSAGES"];

@@ -75,3 +75,4 @@ var thing = client.tempBans.get(message.guild.id) || {}; // probably copy this M
 };
 
 exports.category = "Moderation";
+exports.neededPerms = ["BAN_MEMBERS"];

@@ -198,7 +198,7 @@ exports.run = async (client, message, args) => {
           });
         }
       } else if (message.mentions.members.first()) {
-        var rankData = client.rankData.get(message.guild.id, message.author.id);
+        var rankData = client.rankData.get(message.guild.id, getIdFromMention(args[0]));
 
         if(!message.guild.members.cache.get(getIdFromMention(args[0])).user.bot) {
 
@@ -207,8 +207,109 @@ exports.run = async (client, message, args) => {
             "This user isn't ranked yet. Wait for this user to send some messages first, then try again."
           );
         } else {
+        	var memberArray = [];
+          var memberLevels = [];
+          memberArray = Object.keys(client.rankData.get(message.guild.id));
+          memberLevels = memberArray.map(function(e) {
+            return client.rankData.get(message.guild.id, e).level;
+          });
+          memberLevelsToRankCheck = memberArray.map(function(e) {
+            return (
+              Number(client.rankData.get(message.guild.id, e).level) +
+              Number(client.rankData.get(message.guild.id, e).xp)
+            );
+          });
+          var sortedArray = memberLevelsToRankCheck
+            .filter((v, i, a) => a.indexOf(v) === i)
+            .sort((a, b) => b - a);
+          var memberRanks = memberLevelsToRankCheck.map(
+            (v) => sortedArray.findIndex((e) => e == v) + 1
+          );
+          var rank = "#" + memberRanks[memberArray.indexOf(getIdFromMention(args[0]))];
 
-        }
+          var level = rankData.level;
+          var xp = kFormatter(rankData.xp);
+          var neededXp = kFormatter((rankData.level + 1) * 100);
+          var slideWidth =
+            (678 * ((rankData.xp * 100) / ((rankData.level + 1) * 100))) / 100;
+
+          const { registerFont, createCanvas, loadImage } = require("canvas");
+
+          registerFont("./assets/Montserrat-Medium.ttf", {
+            family: "Montserrat",
+            weight: "normal",
+          });
+          registerFont("./assets/Montserrat-Bold.ttf", {
+            family: "Montserrat",
+            weight: "bold",
+          });
+
+          const canvas = createCanvas(934, 382);
+          const ctx = canvas.getContext("2d");
+
+          const dots = await loadImage("./assets/dots.png");
+          ctx.drawImage(dots, 0, 0);
+
+          ctx.fillStyle = client.rankcolour.get(getIdFromMention(args[0])) || "#2D9CDB";
+          ctx.fillRect(0, 0, 10, 382);
+
+          ctx.font = "bold 24px Montserrat";
+          ctx.fillStyle = "white";
+          ctx.textAlign = "right";
+          ctx.fillText("Level " + level + "   Rank " + rank, 934 - 47, 193);
+          ctx.textAlign = "start";
+          ctx.fillStyle = "white";
+          ctx.font = "bold 38px Montserrat";
+          ctx.fillText(message.guild.members.cache.get(getIdFromMention(args[0])).user.username, 51, 215);
+          ctx.font = "normal 38px Montserrat";
+          ctx.fillStyle = "#999999";
+          ctx.fillText(
+            "#" + message.guild.members.cache.get(getIdFromMention(args[0])).user.discriminator,
+            60 + ctx.measureText(message.guild.members.cache.get(getIdFromMention(args[0])).user.username).width,
+            215
+          );
+
+          ctx.fillStyle = "#cccccc";
+          ctx.font = "normal 24px Montserrat";
+
+          ctx.textAlign = "right";
+          ctx.fillText(xp + `/` + neededXp, 934 - 47, 223);
+          ctx.textAlign = "start";
+
+          ctx.fillStyle = "white";
+          roundRect(ctx, 51, 279, 836, 5, 4, true);
+
+          ctx.fillStyle = client.rankcolour.get(getIdFromMention(args[0])) || "#2D9CDB";
+          roundRect(ctx, 51, 279, slideWidth, 5, 4, true);
+
+          const canvas2 = createCanvas(80, 80);
+          const ctx2 = canvas2.getContext("2d");  
+
+          const img = await loadImage(message.guild.members.cache.get(getIdFromMention(args[0])).user.displayAvatarURL({ format: 'png' }));
+
+          ctx2.drawImage(img, 0, 0, 80, 80);
+
+          ctx2.globalCompositeOperation = "destination-in";
+          ctx2.beginPath();
+          ctx2.arc(40, 40, 40, 0, 2 * Math.PI, true);
+          ctx2.fill();
+
+          ctx.drawImage(canvas2, 51, 84);
+
+          var base64Data = canvas
+            .toDataURL()
+            .replace(/^data:image\/png;base64,/, "");
+
+          var rankName = createUUID() + ".png";
+
+          require("fs").writeFile(rankName, base64Data, "base64", function(
+            err
+          ) {
+            message.channel.send({ files: [{ attachment: rankName, name: rankName }] }).then(() => {
+              require("fs").unlink(rankName, function(err) {});
+            });
+          });
+        	        }
       } else {
         message.channel.send(
             "Bots can't be ranked."

@@ -299,7 +299,7 @@ client.moderation = [
 client.toxicity = ["toxicity"];
 
 client.wasFiltered = null;
-client.version = "1.5.1";
+client.version = "1.6.1";
 
 fs.readdir("./events/", (err, files) => {
   if (err) return console.error(err);

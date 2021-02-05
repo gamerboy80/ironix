@@ -117,3 +117,4 @@ try {
 };
 
 exports.category = "Moderation";
+exports.neededPerms = ["MANAGE_ROLES"];

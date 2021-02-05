@@ -84,3 +84,4 @@ function isToxicityBigger(a, b) {
     return false;
   }
 }
+exports.neededPerms = ["MANAGE_MESSAGES"];

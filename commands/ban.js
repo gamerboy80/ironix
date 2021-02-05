@@ -261,3 +261,4 @@ exports.run = (client, message, args) => {
 };
 
 exports.category = "Moderation";
+exports.neededPerms = ["BAN_MEMBERS"];

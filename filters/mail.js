@@ -54,3 +54,4 @@ exports.run = (client, message, args) => {
     }
   }
 };
+exports.neededPerms = ["MANAGE_MESSAGES"];

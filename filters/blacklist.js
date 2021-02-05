@@ -53,7 +53,7 @@ if(message.content.length > 1024) {
     .setAuthor(message.author.tag, message.author.displayAvatarURL())
     .setFooter("User ID: " + message.author.id)
     .setTimestamp((new Date((Number(message.id) / 4194304) + 1420070400000)))
-    .setDescription("**blocklisted word said in <#" + message.channel.id + ">**")
+    .setDescription("**Blocklisted word said in <#" + message.channel.id + ">**")
     .addField("Filtered message:\n", ((message.content.length > 1024) ? "[Open message in a new tab]" + "(https://hastebin.com/" + key1  + ")" : message.content))
     .addField("Filtered word:\n", client.blocklist.get(message.guild.id)[i]);
 
@@ -114,7 +114,7 @@ if(message.content.length > 1024) {
     .setAuthor(message.author.tag, message.author.displayAvatarURL())
     .setFooter("User ID: " + message.author.id)
     .setTimestamp(message.createdAt)
-    .setDescription("**blocklisted word said in <#" + message.channel.id + ">**")
+    .setDescription("**Blocklisted word said in <#" + message.channel.id + ">**")
     .addField("Filtered message:\n", ((message.content.length > 1024) ? "[Open message in a new tab]" + "(https://hastebin.com/" + key1  + ")" : message.content))
     .addField("Filtered word:\n", client.blocklist.get(message.guild.id)[i]);
 
@@ -129,3 +129,4 @@ if(message.content.length > 1024) {
   }
   }
 };
+exports.neededPerms = ["MANAGE_MESSAGES"];
