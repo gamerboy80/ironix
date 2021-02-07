@@ -13,13 +13,13 @@ exports.run = (client, message, args) => {
     )
     .addField("Where we get memes", "https://www.reddit.com/r/Memes/")
   .addField(
-      "String writers and website designers",
+      "String writers",
       "Zen01#1337 (105430930134462464), Alur2020#5471 (754763473006624808)"
     )
     .addField("Our Logo & Rank Card Designer", "https://twitter.com/zeealeid")
     .addField(
       "Our Beta Testers",
-      "Zen01#1337 (105430930134462464), Alur2020#5471 (754763473006624808)"
+      "cat107#5775 (564243464905031690), Zen01#1337 (105430930134462464), Alur2020#5471 (754763473006624808)"
     )
     .addField(
       "The Users",

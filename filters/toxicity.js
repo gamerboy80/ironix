@@ -1,5 +1,6 @@
 exports.run = (client, message, args) => {
   if(!client.disabledFunctions.get(message.guild.id).includes("toxicity")) {
+    if(message.guild.channels.cache.get(client.inspection.get(message.guild.id)) != undefined) {
     if(Array.isArray(client.notAnalyze.get(message.guild.id)) == false) {
       client.notAnalyze.set(message.guild.id, [])
     }
@@ -66,6 +67,7 @@ exports.run = (client, message, args) => {
     }));
     }
   })();
+}
 }
 }
 };
