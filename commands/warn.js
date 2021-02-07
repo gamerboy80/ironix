@@ -48,7 +48,6 @@ exports.run = (client, message, args) => {
               client.warns.set(message.guild.id, thing, user.id);
 
 
-try {
               client.users.fetch(user.id).then((usera) => {
                 usera
                   .createDM()
@@ -59,10 +58,9 @@ try {
                         "** warned you because **" +
                         reason +
                         ".**\n***Please, don't answer this message***"
-                    )
+                    ).catch()
                   );
               });
-            } catch {}
 
               message.channel.send({
                 embed: {

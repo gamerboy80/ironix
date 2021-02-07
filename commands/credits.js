@@ -29,7 +29,9 @@ exports.run = (client, message, args) => {
       `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
       message.author.displayAvatarURL()
     );
-  message.author.send({ embed });
-  message.channel.send("I DMed you!")
+    try {
+  message.author.send({ embed }).then(() =>  message.channel.send("I DMed you!")).catch(() => message.channel.send("I tried but failed to DM you!"));
+} catch {}
+  
 };
 exports.category = "Info";

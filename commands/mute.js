@@ -145,8 +145,7 @@ exports.run = (client, message, args) => {
                   }
 
                   message.guild.members.cache.get(user.id).roles.add(muteRole.id);
-
-try {
+                  
                   client.users.fetch(user.id).then((usera) => {
                     usera
                       .createDM()
@@ -164,10 +163,9 @@ try {
                             " **because **" +
                             reason +
                             ".**\n***Please, don't answer this message***"
-                        )
+                        ).catch()
                       );
                   });
-                } catch {}
 
                   message.channel.send({
                     embed: {
@@ -218,7 +216,6 @@ try {
 
                     message.guild.members.cache.get(user.id).roles.add(muteRole.id);
 
-try {
                     client.users.fetch(user.id).then((usera) => {
                       usera
                         .createDM()
@@ -229,10 +226,9 @@ try {
                               "** muted you permanently because **" +
                               reason +
                               ".**\n***Please, don't answer this message***"
-                          )
+                          ).catch()
                         );
                     });
-                  } catch {}
 
                     message.channel.send({
                       embed: {

@@ -45,7 +45,6 @@ exports.run = (client, message, args) => {
             
             message.guild.members.cache.get(user.id).roles.remove(muteRole.id);
 
-try {
             client.users.fetch(user.id).then(usera => {
               usera
                 .createDM()
@@ -55,10 +54,9 @@ try {
                       message.member.user.tag +
                       "** unmuted you" +
                       ".\n***Please, don't answer this message***"
-                  )
+                  ).catch()
                 );
             });
-          } catch {}
 
             message.channel.send({
               embed: {
