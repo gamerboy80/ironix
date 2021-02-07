@@ -17,7 +17,6 @@ exports.run = (client, message, args) => {
     }
   }
 
-  if (message.mentions.members.first()) {
     if (getIdFromMention(args[0]) != undefined) {
       message.channel.send({
         embed: {
@@ -70,9 +69,43 @@ exports.run = (client, message, args) => {
     } else {
       message.channel.send({
         embed: {
-          color: 0xc85151,
-          description:
-            "Invalid syntax | CORRECT SYNTAX: " + prefix + "userInfo [user]",
+          color: 0x51c878,
+          author: {
+            name: message.author.tag + " (" + message.author.id + ")",
+          },
+          description: "**User info**",
+          thumbnail: {
+            url: message.author
+              .displayAvatarURL(),
+          },
+          fields: [
+            {
+              name: "Created on",
+              value: message.author
+                .createdAt,
+            },
+            {
+              name: "Joined on",
+              value: message.member
+                .joinedAt,
+            },
+            {
+              name: "Permissions",
+              value: message.member
+                .permissions.toArray()
+                .toString()
+                .split(",")
+                .join(", "),
+            },
+            {
+              name: "Roles",
+              value: message.member
+                .roles.cache.map((role) => "<@&" + role.id + ">")
+                .toString()
+                .split(",")
+                .join(", "),
+            },
+          ],
           footer: {
             text: `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
             icon_url: message.author.displayAvatarURL(),
@@ -80,19 +113,6 @@ exports.run = (client, message, args) => {
         },
       });
     }
-  } else {
-    message.channel.send({
-      embed: {
-        color: 0xc85151,
-        description:
-          "Invalid syntax | CORRECT SYNTAX: " + prefix + "userInfo [user]",
-        footer: {
-          text: `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
-          icon_url: message.author.displayAvatarURL(),
-        },
-      },
-    });
-  }
 };
 
 exports.category = "Utility";
