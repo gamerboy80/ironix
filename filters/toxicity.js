@@ -7,7 +7,7 @@ function cyrillicToThingo(str) {
       const listUpperThingo = ["A", "B", "B", "R", "R", "R", "A", "H", "E", "E", "E", "X", "E", "S", "N", "I", "I", "N", "J", "K", "N", "B", "M", "H", "H", "O", "N", "P", "C", "T", "H", "K", "Y", "Y", "O", "X", "U", "Y", "U", "W", "W", "B", "B", "B", "E", "O", "R"];
       const listDownerThingo = ["a", "b", "b", "r", "r", "r", "a", "h", "E", "e", "e", "x", "e", "s", "n", "i", "i", "n", "j", "k", "n", "b", "m", "h", "h", "o", "n", "p", "c", "t", "h", "k", "y", "y", "o", "x", "u", "y", "u", "w", "w", "b", "b", "b", "e", "o", "r"];
       let preFinalString = [];
-      str.split("").forEach((letter) => {
+      (str || "").split("").forEach((letter) => {
         if (listDownerCyrillic.indexOf(letter) != -1 || listUpperCyrillic.indexOf(letter) != -1) { 
             preFinalString.push(listDownerCyrillic.indexOf(letter) != -1 ? listDownerThingo[listDownerCyrillic.indexOf(letter)] : listUpperThingo[listUpperCyrillic.indexOf(letter)]);
         } else {
