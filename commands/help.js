@@ -1,5 +1,5 @@
 exports.run = (client, message, args) => {
-  const embed = new (require("discord.js").MessageEmbed)().setColor(16711680);
+  const embed = new (require("discord.js").MessageEmbed)().setColor(0x51c878);
   var d = client.disabledFunctions.get(message.guild.id);
   var a = {};
   a.Disabled = [];

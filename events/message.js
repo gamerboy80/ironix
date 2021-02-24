@@ -214,7 +214,10 @@ var needed = (Math.round(Math.pow(rankData.level, 2) / 10) + 2) * 10;
     .slice(prefix.length)
     //.trim()
     .split(/ +/g);
-  const command = args.shift().toLowerCase();
+  let command = args.shift().toLowerCase();
+  if(client.aliases.get(message.author.id)) {
+  if(client.aliases.get(message.author.id)[command]) { command = client.aliases.get(message.author.id)[command] }
+}
 
   // Grab the command data from the client.commands Enmap
   const cmd = client.commands.get(command);

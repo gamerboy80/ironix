@@ -102,8 +102,10 @@ exports.run = async (client, message, args) => {
           });
           memberLevelsToRankCheck = memberArray.map(function(e) {
             return (
-              Number(client.rankData.get(message.guild.id, e).level) +
-              Number(client.rankData.get(message.guild.id, e).xp)
+              client.rankData.get(message.guild.id, e).level.toString() +
+        ".1" +
+        client.rankData.get(message.guild.id, e).xp.toString() +
+        "1"
             );
           });
           var sortedArray = memberLevelsToRankCheck
@@ -215,8 +217,10 @@ exports.run = async (client, message, args) => {
           });
           memberLevelsToRankCheck = memberArray.map(function(e) {
             return (
-              Number(client.rankData.get(message.guild.id, e).level) +
-              Number(client.rankData.get(message.guild.id, e).xp)
+              client.rankData.get(message.guild.id, e).level.toString() +
+        ".1" +
+        client.rankData.get(message.guild.id, e).xp.toString() +
+        "1"
             );
           });
           var sortedArray = memberLevelsToRankCheck

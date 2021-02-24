@@ -1,6 +1,6 @@
 exports.run = (client, message, args) => {
   if (message.member.hasPermission("MANAGE_GUILD")) {
-    if (client.blocklist.get(message.guild.id).toString() != "") {
+    if (client.blocklist.get(message.guild.id).length != 0) {
       message.channel.send({
         embed: {
           color: 0x51c878,

@@ -1,19 +1,32 @@
 exports.run = (client, message, args) => {
   if(!client.disabledFunctions.get(message.guild.id).includes("music")) {
 	if(message.member.roles.cache.find(role => role.name === "Music Master") || message.member.hasPermission("MANAGE_GUILD")) {
-  if(message.guild.members.cache.get(client.user.id).voice.channel) {
-  	message.guild.members.cache.get(client.user.id).voice.channel.leave();
-  	client.queue[message.guild.id] = [];
-    message.channel.send({
+  if(client.dispatcher[message.guild.id]) {
+    if(!isNaN(Number(args[0]))) {
+      client.dispatcher[message.guild.id].setVolume(Number(args[0]) / 100);
+  	message.channel.send({
           embed: {
             color: 0x51c878,
-            description: "Stopped.",
+            url: client.queue[message.guild.id][0].url,
+            description: "Volume set to " + args[0] + "%!",
             footer: {
               text: `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
               icon_url: message.author.displayAvatarURL()
             }
           }
         });
+  } else {
+    message.channel.send({
+          embed: {
+            color: 0xc85151,
+            description: "Please input a valid number!",
+            footer: {
+              text: `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
+              icon_url: message.author.displayAvatarURL()
+            }
+          }
+        });
+  }
   } else {
     message.channel.send({
           embed: {

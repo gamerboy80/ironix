@@ -218,6 +218,7 @@ client.inspection = new enmap({ name: "inspection" });
 client.toxicLimit = new enmap({ name: "toxicLimit" });
 client.notAnalyze = new enmap({ name: "notAnalyze" });
 client.usersOnCountdown = new enmap({ name: "usersOnCountdown" });
+client.aliases = new enmap({ name: "aliases" });
 client.tADisabled = [
   "blocklist",
   "kick",
@@ -244,6 +245,8 @@ client.tADisabled = [
   "moderation",
   "filters",
   "warn",
+  "messeveryone",
+  "music"
 ];
 client.xpblocked = new enmap({ name: "xpblocked" });
 client.rankcolour = new enmap({ name: "rankcolour" });
@@ -278,6 +281,7 @@ client.fun = [
   "minesweeper",
   "rps",
   "pig",
+  "messeveryone"
 ];
 client.bird = ["bird"];
 client.cat = ["cat"];
@@ -295,12 +299,65 @@ client.moderation = [
   "unban",
   "unmute",
   "warn",
-  "warnings",
+  "warns",
 ];
 client.toxicity = ["toxicity"];
+client.messeveryone = ["messeveryone"];
+client.music = [
+  "play",
+  "stop",
+  "skip",
+  "queue",
+  "nowplaying",
+  "volume"
+];
 
 client.wasFiltered = null;
-client.version = "1.6.5";
+
+client.queue = {};
+client.dispatcher = {};
+client.playSong = function(video, message) {
+    if(video.vc) {
+    message.channel.send({
+          embed: {
+            color: 0x51c878,
+            title: "🔈 " + video.title,
+            url: video.url,
+            description: "By " + video.author + " - Duration: " + video.duration,
+            image: {
+              url: video.thumbnail
+            },
+            footer: {
+              text: `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
+              icon_url: message.author.displayAvatarURL()
+            }
+          }
+        });
+
+      client.dispatcher[message.guild.id] = video.vc.play(video.playableUrl, { highWaterMark: 1<<25, type: 'opus' }).on("finish", finish => {
+        client.queue[message.guild.id].shift();
+        if(client.queue[message.guild.id].length > 0) {
+        playSong(client.queue[message.guild.id][0]);
+      } else {
+        message.guild.members.cache.get(client.user.id).voice.channel.leave();
+      }
+      });
+    } else {
+      client.queue[message.guild.id] = [];
+      message.channel.send({
+          embed: {
+            color: 0xc85151,
+            description: "Something went terribly wrong, please try again later.",
+            footer: {
+              text: `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
+              icon_url: message.author.displayAvatarURL()
+            }
+          }
+        });
+    }
+  }
+
+client.version = "1.7";
 
 fs.readdir("./events/", (err, files) => {
   if (err) return console.error(err);

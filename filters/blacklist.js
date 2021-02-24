@@ -3,6 +3,22 @@ exports.run = (client, message, args) => {
   function reverseString(str) {
       return str.split("").reverse().join("");
     }
+
+    function cyrillicToThingo(str) {
+      const listUpperCyrillic = ["А", "Б", "В", "Г", "Ґ", "Ѓ", "Д", "Ђ", "Є", "Е", "Ё", "Ж", "З", "Ѕ", "И", "І", "Ї", "Й", "Ј", "К", "Л", "Љ", "М", "Н", "Њ", "О", "П", "Р", "С", "Т", "Ћ", "Ќ", "У", "Ў", "Ф", "Х", "Ц", "Ч", "Џ", "Ш", "Щ", "Ъ", "Ы", "Ь", "Э", "Ю", "Я"];
+      const listDownerCyrillic = ["а", "б", "в", "г", "ґ", "ѓ", "д", "ђ", "є", "е", "ё", "ж", "з", "ѕ", "и", "і", "ї", "й", "ј", "к", "л", "љ", "м", "н", "њ", "о", "п", "р", "с", "т", "ћ", "ќ", "у", "ў", "ф", "х", "ц", "ч", "џ", "ш", "щ", "ъ", "ы", "ь", "э", "ю", "я"];
+      const listUpperThingo = ["A", "B", "B", "R", "R", "R", "A", "H", "E", "E", "E", "X", "E", "S", "N", "I", "I", "N", "J", "K", "N", "B", "M", "H", "H", "O", "N", "P", "C", "T", "H", "K", "Y", "Y", "O", "X", "U", "Y", "U", "W", "W", "B", "B", "B", "E", "O", "R"];
+      const listDownerThingo = ["a", "b", "b", "r", "r", "r", "a", "h", "E", "e", "e", "x", "e", "s", "n", "i", "i", "n", "j", "k", "n", "b", "m", "h", "h", "o", "n", "p", "c", "t", "h", "k", "y", "y", "o", "x", "u", "y", "u", "w", "w", "b", "b", "b", "e", "o", "r"];
+      let preFinalString = [];
+      str.split("").forEach((letter) => {
+        if (listDownerCyrillic.indexOf(letter) != -1 || listUpperCyrillic.indexOf(letter) != -1) { 
+            preFinalString.push(listDownerCyrillic.indexOf(letter) != -1 ? listDownerThingo[listDownerCyrillic.indexOf(letter)] : listUpperThingo[listUpperCyrillic.indexOf(letter)]);
+        } else {
+          preFinalString.push(letter);
+        }
+      });
+      return preFinalString.join("").toLowerCase();
+    }
   
   var mm;
   if (Array.isArray(client.blocklist.get(message.guild.id))) {
@@ -25,6 +41,24 @@ exports.run = (client, message, args) => {
             .replace(/\W/g, "")
             .replace(/_/g, "")
         ).includes(client.blocklist.get(message.guild.id)[i])
+        ||
+        cyrillicToThingo(message.content
+          .toLowerCase()
+          .includes(client.blocklist.get(message.guild.id)[i])) ||
+        cyrillicToThingo(message.content
+          .toLowerCase()
+          .replace(/\W/g, "")
+          .replace(/_/g, "")
+          .includes(client.blocklist.get(message.guild.id)[i])) ||
+        cyrillicToThingo(reverseString(message.content.toLowerCase()).includes(
+          client.blocklist.get(message.guild.id)[i]
+        )) ||
+        cyrillicToThingo(reverseString(
+          message.content
+            .toLowerCase()
+            .replace(/\W/g, "")
+            .replace(/_/g, "")
+        ).includes(client.blocklist.get(message.guild.id)[i]))
       ) {
         client.wasFiltered = true;
         message.delete().then(m =>
@@ -86,6 +120,24 @@ if(message.content.length > 1024) {
             .replace(/\W/g, "")
             .replace(/_/g, "")
         ).includes(client.blocklist.get(message.guild.id)[i])
+        ||
+        cyrillicToThingo(message.content
+          .toLowerCase()
+          .includes(client.blocklist.get(message.guild.id)[i])) ||
+        cyrillicToThingo(message.content
+          .toLowerCase()
+          .replace(/\W/g, "")
+          .replace(/_/g, "")
+          .includes(client.blocklist.get(message.guild.id)[i])) ||
+        cyrillicToThingo(reverseString(message.content.toLowerCase()).includes(
+          client.blocklist.get(message.guild.id)[i]
+        )) ||
+        cyrillicToThingo(reverseString(
+          message.content
+            .toLowerCase()
+            .replace(/\W/g, "")
+            .replace(/_/g, "")
+        ).includes(client.blocklist.get(message.guild.id)[i]))
       ) {
         client.wasFiltered = true;
         message.delete().then(m =>

@@ -12,6 +12,7 @@ exports.run = (client, message, args) => {
       "https://apify.com/covid-19"
     )
     .addField("Where we get memes", "https://www.reddit.com/r/Memes/")
+        .addField("Owners", "Sapphire 🌈#8305 (590286395143356417), what if#8183 (181244076970999808)")
   .addField(
       "String writers",
       "Zen01#1337 (105430930134462464), Alur2020#5471 (754763473006624808)"

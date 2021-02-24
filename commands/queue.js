@@ -1,36 +1,27 @@
 exports.run = (client, message, args) => {
-  if(!client.disabledFunctions.get(message.guild.id).includes("music")) {
-	if(message.member.roles.cache.find(role => role.name === "Music Master") || message.member.hasPermission("MANAGE_GUILD")) {
-  if(message.guild.members.cache.get(client.user.id).voice.channel) {
-  	message.guild.members.cache.get(client.user.id).voice.channel.leave();
-  	client.queue[message.guild.id] = [];
-    message.channel.send({
+	if(!client.disabledFunctions.get(message.guild.id).includes("music")) {
+  if(client.queue[message.guild.id]) {
+  	if(client.queue[message.guild.id].length != 0) {
+  		var listElements = [];
+  		client.queue[message.guild.id].forEach((video, i) => {
+  			listElements.push("#" + i + " - [" + video.title + "](" + video.url + ") by " + video.author + " - " + video.duration)
+  		});
+  	message.channel.send({
           embed: {
             color: 0x51c878,
-            description: "Stopped.",
+            title: "Queue - Volume: " + (client.dispatcher[message.guild.id].volume * 100) + "%",
+            description: listElements.join("\n"),
             footer: {
               text: `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
               icon_url: message.author.displayAvatarURL()
             }
           }
         });
-  } else {
-    message.channel.send({
-          embed: {
-            color: 0xc85151,
-            description: "I'm not in a VC!",
-            footer: {
-              text: `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
-              icon_url: message.author.displayAvatarURL()
-            }
-          }
-        });
-  }
 } else {
-	message.channel.send({
+	 message.channel.send({
           embed: {
             color: 0xc85151,
-            description: "You need Music Master role or `MANAGE_GUILD` permission!",
+            description: "There's nothing in the queue!",
             footer: {
               text: `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
               icon_url: message.author.displayAvatarURL()
@@ -38,6 +29,18 @@ exports.run = (client, message, args) => {
           }
         });
 }
+  } else {
+    message.channel.send({
+          embed: {
+            color: 0xc85151,
+            description: "There's nothing in the queue!",
+            footer: {
+              text: `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
+              icon_url: message.author.displayAvatarURL()
+            }
+          }
+        });
+  }
 }
 };
 
