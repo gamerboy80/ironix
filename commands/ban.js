@@ -62,8 +62,9 @@ exports.run = (client, message, args) => {
                   }
                   client.users.fetch(user.id).then((usera) => {
                     usera
-                      .createDM()
-                      .then((dm) =>
+                      .createDM().catch(console.log)
+                      .then((dm) => {
+                  if(dm != undefined) {
                         dm.send(
                           "**" +
                             message.member.user.tag +
@@ -77,7 +78,9 @@ exports.run = (client, message, args) => {
                             " **because **" +
                             reason +
                             ".**\n***Please, don't answer this message***"
-                        ).catch()
+                        ).catch(console.log);
+                      }
+                    }
                       );
                   });
 
@@ -132,7 +135,7 @@ exports.run = (client, message, args) => {
                     
                     client.users.fetch(user.id).then((usera) => {
                       usera
-                        .createDM()
+                        .createDM().catch(console.log)
                         .then((dm) =>
                           dm.send(
                             "**" +
@@ -140,7 +143,7 @@ exports.run = (client, message, args) => {
                               "** banned you permanently because **" +
                               reason +
                               ".**\n***Please, don't answer this message***"
-                          ).catch()
+                          ).catch(console.log)
                         );
                     });
 

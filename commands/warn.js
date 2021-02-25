@@ -50,15 +50,18 @@ exports.run = (client, message, args) => {
 
               client.users.fetch(user.id).then((usera) => {
                 usera
-                  .createDM()
-                  .then((dm) =>
+                  .createDM().catch(console.log)
+                  .then((dm) => {
+                  if(dm != undefined) {
                     dm.send(
                       "**" +
                         message.member.user.tag +
                         "** warned you because **" +
                         reason +
                         ".**\n***Please, don't answer this message***"
-                    ).catch()
+                    ).catch(console.log);
+                  }
+                }
                   );
               });
 

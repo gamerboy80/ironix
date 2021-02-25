@@ -357,7 +357,7 @@ client.playSong = function(video, message) {
     }
   }
 
-client.version = "1.7";
+client.version = "1.7.1";
 
 fs.readdir("./events/", (err, files) => {
   if (err) return console.error(err);

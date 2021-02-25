@@ -47,14 +47,14 @@ exports.run = (client, message, args) => {
 
             client.users.fetch(user.id).then(usera => {
               usera
-                .createDM()
+                .createDM().catch(console.log)
                 .then(dm =>
                   dm.send(
                     "**" +
                       message.member.user.tag +
                       "** unmuted you" +
                       ".\n***Please, don't answer this message***"
-                  ).catch()
+                  ).catch(console.log)
                 );
             });
 
@@ -71,6 +71,38 @@ exports.run = (client, message, args) => {
               }
             });
           } else {
+            if(message.guild.members.cache.get(user.id).roles.cache.has(muteRole.id)) {
+              message.guild.members.cache.get(user.id).roles.remove(muteRole.id);
+
+            client.users.fetch(user.id).then(usera => {
+              usera
+                .createDM().catch(console.log)
+                .then(dm => {
+                  if(dm != undefined) {
+                  dm.send(
+                    "**" +
+                      message.member.user.tag +
+                      "** unmuted you" +
+                      ".\n***Please, don't answer this message***"
+                  ).catch(console.log);
+                }
+                }
+                );
+            });
+
+            message.channel.send({
+              embed: {
+                color: 0x51c878,
+                description:
+                  user.tag +
+                  " was unmuted successfully.",
+                footer: {
+                  text: `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
+                  icon_url: message.author.displayAvatarURL()
+                }
+              }
+            });
+            } else {
             message.channel.send({
               embed: {
                 color: 0xc85151,
@@ -81,6 +113,7 @@ exports.run = (client, message, args) => {
                 }
               }
             });
+          }
           }
         });
       }

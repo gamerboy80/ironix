@@ -30,8 +30,9 @@ exports.run = (client, message, args) => {
               try {
               client.users.fetch(user.id).then(usera => {
                 usera
-                  .createDM()
-                  .then(dm =>
+                  .createDM().catch(console.log)
+                  .then(dm => {
+                  if(dm != undefined) {
                     dm.send(
                       "**" +
                         message.member.user.tag +
@@ -39,6 +40,8 @@ exports.run = (client, message, args) => {
                         messageReady +
                         ".**\n***Please, don't answer this message***"
                     )
+                  }
+                }
                   )
                   .then(() => {
                     message.guild.members.cache.get(user.id).kick();
