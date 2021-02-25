@@ -337,7 +337,7 @@ client.playSong = function(video, message) {
       client.dispatcher[message.guild.id] = video.vc.play(video.playableUrl, { highWaterMark: 1<<25, type: 'opus' }).on("finish", finish => {
         client.queue[message.guild.id].shift();
         if(client.queue[message.guild.id].length > 0) {
-        playSong(client.queue[message.guild.id][0]);
+        client.playSong(client.queue[message.guild.id][0]);
       } else {
         message.guild.members.cache.get(client.user.id).voice.channel.leave();
       }
@@ -357,7 +357,7 @@ client.playSong = function(video, message) {
     }
   }
 
-client.version = "1.7.1";
+client.version = "1.7.2";
 
 fs.readdir("./events/", (err, files) => {
   if (err) return console.error(err);
