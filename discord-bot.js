@@ -2,6 +2,21 @@ const discord = require("discord.js");
 const client = new discord.Client({ fetchAllMembers: true, ws: { properties: { $browser: "Discord iOS" } } });
 const enmap = require("enmap"); 
 client.config = require("./config.json");
+client.config.categories = [
+    "Owner",
+    "Privacy",
+    "Settings",
+    "Blocklist",
+    "Moderation",
+    "Suggestions",
+    "Challenges",
+    "Utility",
+    "Rank",
+    "Fun",
+    "Music",
+    "Info",
+    "Disabled"
+  ];
 const needle = require("needle");
 const fs = require("fs");
 var clone = require("lodash.clonedeep");
@@ -30,6 +45,8 @@ function getHtmlStart(webTitle) {
     <title>`+ webTitle + `</title>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/all.css">
+    <meta property="og:image" content="/og.png">
+    <meta property="twitter:card" content="summary_large_image">
 </head>
 <body>
     <div class="container">
@@ -39,6 +56,7 @@ function getHtmlStart(webTitle) {
                 <li class="verticalSeparator"></li>
                 <li><a href="/" id="home">Home</a></li>
                 <li><a href="/features" id="features">Features</a></li>
+                <li><a href="/privacy" id="privacy">Privacy</a></li>
                 <li style="display: none;" id="otherLi"><a href="#" id="other" >Other</a></li>
             </ul>
             <div class="horizontalSeparator"></div>
@@ -165,6 +183,9 @@ app.get("/", (req, res) => {
 app.get("/features*", (req, res) => {
   res.sendFile(__dirname + "/public/features.html");
 });
+app.get("/privacy*", (req, res) => {
+  res.sendFile(__dirname + "/public/privacy.html");
+});
 
 app.get("/invite*", (req, res) => {
   res.redirect(
@@ -219,6 +240,8 @@ client.toxicLimit = new enmap({ name: "toxicLimit" });
 client.notAnalyze = new enmap({ name: "notAnalyze" });
 client.usersOnCountdown = new enmap({ name: "usersOnCountdown" });
 client.aliases = new enmap({ name: "aliases" });
+client.optedIn = new enmap({ name: "optedIn" });
+client.challenges = new enmap({ name: "challenges" });
 client.tADisabled = [
   "blocklist",
   "kick",
@@ -357,7 +380,7 @@ client.playSong = function(video, message) {
     }
   }
 
-client.version = "1.7.3";
+client.version = "1.8";
 
 fs.readdir("./events/", (err, files) => {
   if (err) return console.error(err);

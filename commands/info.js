@@ -1,4 +1,4 @@
-exports.run = (client, message, args) => {
+  exports.run = (client, message, args) => {
   const embed = new (require("discord.js")).MessageEmbed()
     .setTitle("Bot Info")
     .addField("Version", client.version)

@@ -231,7 +231,42 @@ client.usersOnCountdown.set(message.author.id);
   if(Array.isArray(cmd.neededPerms)) {
         cmd.neededPerms.forEach(perm => {
           if(message.guild.members.cache.get(client.user.id).hasPermission(perm)) {
+            try {
             cmd.run(client, message, args);
+          } catch(error) {
+            console.log(error);
+            
+            if(client.optedIn.get(message.author.id) == true) {
+              let bugReport = {};
+        bugReport.command = message.content;
+        bugReport.error = error.stack.toString();
+        bugReport.guild = message.guild;
+        bugReport.channel = message.channel;
+        bugReport.user = message.author;
+        require("fs").writeFileSync("./bugreports/" + Date.now() + ".txt", JSON.stringify(bugReport, null, 1).replace(/\\n    /g, "\n"))
+              message.channel.send({
+          embed: {
+            color: 0xc85151,
+            description: 'Something went terribly wrong, please try again later. As you opted-in our optional "bug reports" data collection, our team got informed. Thank you!',
+            footer: {
+              text: `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
+              icon_url: message.author.displayAvatarURL()
+            }
+          }
+        });
+            } else {
+            message.channel.send({
+          embed: {
+            color: 0xc85151,
+            description: "Something went terribly wrong, please try again later.",
+            footer: {
+              text: `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
+              icon_url: message.author.displayAvatarURL()
+            }
+          }
+        });
+          }
+          }
           } else {
             message.channel.send({
         embed: {
@@ -247,7 +282,41 @@ client.usersOnCountdown.set(message.author.id);
           }
         });
     } else {
+      try {
       cmd.run(client, message, args);
+    } catch(error) {
+      console.log(error);
+      if(client.optedIn.get(message.author.id) == true) {
+        let bugReport = {};
+        bugReport.command = message.content;
+        bugReport.error = error.stack.toString();
+        bugReport.guild = message.guild;
+        bugReport.channel = message.channel;
+        bugReport.user = message.author;
+        require("fs").writeFileSync("./bugreports/" + Date.now() + ".txt", JSON.stringify(bugReport, null, 1).replace(/\\n    /g, "\n"))
+              message.channel.send({
+          embed: {
+            color: 0xc85151,
+            description: 'Something went terribly wrong, please try again later. As you opted-in our optional "bug reports" data collection, our team got informed. Thank you!',
+            footer: {
+              text: `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
+              icon_url: message.author.displayAvatarURL()
+            }
+          }
+        });
+            } else {
+            message.channel.send({
+          embed: {
+            color: 0xc85151,
+            description: "Something went terribly wrong, please try again later.",
+            footer: {
+              text: `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
+              icon_url: message.author.displayAvatarURL()
+            }
+          }
+        });
+          }
+    }
     }
     setTimeout(() => {
       client.usersOnCountdown.delete(message.author.id);

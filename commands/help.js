@@ -46,6 +46,7 @@ exports.run = (client, message, args) => {
     `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
     message.author.displayAvatarURL()
   );
+  embed.setTitle("Normal commands");
   message.channel.send({ embed });
 };
 

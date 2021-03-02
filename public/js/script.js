@@ -78,6 +78,8 @@ setInterval(() => {
 
 } else if(window.location.pathname == "/features") {
 	document.getElementById('features').classList.add('active');
+} else if(window.location.pathname == "/privacy") {
+document.getElementById('privacy').classList.add('active');
 } else {
 	document.getElementById('other').classList.add('active');
 	document.getElementById('otherLi').style.display = "inline-block";

@@ -68,9 +68,6 @@ const embed = new (require("discord.js").MessageEmbed)()
     client.wasFiltered = null;
   }
 }
-  }
-
-
 
 var prefix = client.prefixes.get(newMessage.guild.id);
   // Ignore messages not starting with the prefix (in config.json)
@@ -95,6 +92,8 @@ var prefix = client.prefixes.get(newMessage.guild.id);
 
   // Run the command
   cmd.run(client, newMessage, args);
+
+  }
 
 
 }

@@ -6,9 +6,12 @@ exports.run = (client, message, args) => {
       if (message.member.hasPermission("KICK_MEMBERS")) {
         if(args[0]) {
           try {
-            let objectThing = client.warns.get(message.guild.id, args[0].slice(0, -1));
+            let objectThing = client.warns.get(message.guild.id, args[0].slice(0, 18));
+            if(!objectThing[args[0]]) {
+              throw "Stop";
+            }
             delete objectThing[args[0]];
-            client.warns.set(message.guild.id, args[0].slice(0, -1), objectThing);
+            client.warns.set(message.guild.id, args[0].slice(0, 18), objectThing);
 
             message.channel.send({
                 embed: {

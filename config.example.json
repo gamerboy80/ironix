@@ -1,23 +1,11 @@
 {
 	"token": "YOUR TOKEN",
 	"perspective": "PERSPECTIVE API KEY",
+	"osu": "OSU API KEY",
 	"websiteDomain": "https://website.domain",
 	"prefix": "??",
 	"owners": [
 		"YOUR ID"
 	],
-	"debug": "false",
-	"categories": [
-		"Owner",
-		"Settings",
-		"blocklist",
-		"Moderation",
-		"Suggestions",
-		"Utility",
-		"Rank",
-		"Fun",
-		"Music",
-		"Info",
-		"Disabled"
-	]
+	"debug": "false"
 }

@@ -1,6 +1,5 @@
 exports.run = (client, message, args) => {
   if(!client.disabledFunctions.get(message.guild.id).includes("music")) {
-	if(message.member.roles.cache.find(role => role.name === "Music Master") || message.member.hasPermission("MANAGE_GUILD")) {
   if(client.queue[message.guild.id]) {
   	message.channel.send({
           embed: {
@@ -29,18 +28,6 @@ exports.run = (client, message, args) => {
           }
         });
   }
-} else {
-	message.channel.send({
-          embed: {
-            color: 0xc85151,
-            description: "You need Music Master role or `MANAGE_GUILD` permission!",
-            footer: {
-              text: `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
-              icon_url: message.author.displayAvatarURL()
-            }
-          }
-        });
-}
 
 function formatFromMs(ms) {
 

@@ -21,10 +21,12 @@ exports.run = (client, message, args) => {
     if (message.mentions.members.first()) {
       if (getIdFromMention(args[0]) != undefined) {
 
-        var warnsList = "";
+        var warnsList = new (require("discord.js")).MessageEmbed()
+  .setColor('#51c878')
+  .setDescription('WARNS:')
+  .setFooter(`Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`, message.author.displayAvatarURL());;
 
         let memberData;
-
         try {
           memberData = client.warns.get(message.guild.id, getIdFromMention(args[0]));
         } catch {}
@@ -42,20 +44,11 @@ exports.run = (client, message, args) => {
           });
         } else {
 
-          for (var i = 0; i < Object.keys(memberData).length; i++) {
-            warnsList = warnsList + "Warn ID: `" + (getIdFromMention(args[0]) + i) + "` | Moderator: <@!" + memberData[(getIdFromMention(args[0]) + i).toString()].moderator + "> | Reason: `" + memberData[(getIdFromMention(args[0]) + i).toString()].reason + "` | Date: `" + new Date(memberData[(getIdFromMention(args[0]) + i).toString()].date) + "`\n\n";
-          }
-
-          message.channel.send({
-            embed: {
-              color: 0x51c878,
-              description: "WARNS: \n\n" + warnsList,
-              footer: {
-                text: `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
-                icon_url: message.author.displayAvatarURL(),
-              },
-            },
+          Object.keys(memberData).forEach((e, i) => {
+            warnsList.addField("Warn ID: " + e, "Moderator: <@!" + memberData[e].moderator + "> | Reason: `" + memberData[e].reason + "` | Date: `" + new Date(memberData[e].date) + "`");
           });
+
+          message.channel.send(warnsList);
 
         }
       } else {
@@ -65,7 +58,7 @@ exports.run = (client, message, args) => {
               description:
                 "Invalid syntax | CORRECT SYNTAX: " +
                 prefix +
-                "warnings [user]",
+                "warns [user]",
               footer: {
                 text: `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
                 icon_url: message.author.displayAvatarURL(),
@@ -80,7 +73,7 @@ exports.run = (client, message, args) => {
               description:
                 "Invalid syntax | CORRECT SYNTAX: " +
                 prefix +
-                "warnings [user]",
+                "warns [user]",
               footer: {
                 text: `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
                 icon_url: message.author.displayAvatarURL(),
