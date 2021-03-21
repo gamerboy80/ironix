@@ -412,7 +412,7 @@ if(client.optedIn.get(message.author.id) == true) {
   }
 };
 
-client.version = "2.0 DEV";
+client.version = "2.0";
 
 fs.readdir("./events/", (err, files) => {
   if (err) return console.error(err);
