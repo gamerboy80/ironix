@@ -1,4 +1,11 @@
-exports.run = (client, message, args) => {
+exports.run = (client, message, args, interaction) => {
+if(interaction) {
+client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 5
+            },
+        });
+}
   if (message.member.hasPermission("MANAGE_GUILD")) {
     var prefix = client.prefixes.get(message.guild.id);
     if(!typeof client.leveluproles.get(message.guild.id) === 'object') { client.leveluproles.set(message.guild.id, {}); }
@@ -46,4 +53,11 @@ exports.run = (client, message, args) => {
   }
 };
 
-exports.category = "Rank";
+exports.category = "Settings";
+exports.syntax = "addleveluprole [Level Number]";
+exports.specialSlash = [{
+    name: 'LevelNumber',
+    description: 'Description',
+    type: 3,
+    required: true
+  }];

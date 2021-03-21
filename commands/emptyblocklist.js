@@ -1,4 +1,11 @@
-exports.run = (client, message, args) => {
+exports.run = (client, message, args, interaction) => {
+if(interaction) {
+client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 5
+            },
+        });
+}
   if (Array.isArray(client.blocklist.get(message.guild.id)) == false) {
     client.blocklist.set(message.guild.id, []);
   }

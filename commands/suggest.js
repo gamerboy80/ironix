@@ -1,4 +1,11 @@
-exports.run = (client, message, args) => {
+exports.run = (client, message, args, interaction) => {
+if(interaction) {
+client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 5
+            },
+        });
+}
   if (!client.disabledFunctions.get(message.guild.id).includes("suggest")) {
     var suggestionChannel = client.suggestions.get(message.guild.id);
     if (message.guild.channels.cache.get(suggestionChannel) != undefined) {
@@ -74,3 +81,10 @@ exports.run = (client, message, args) => {
 };
 
 exports.category = "Suggestions";
+exports.syntax = "suggest [suggestion]";
+exports.specialSlash = [{
+    name: 'Suggestion',
+    description: 'Description',
+    type: 3,
+    required: true
+  }];

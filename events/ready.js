@@ -9,7 +9,7 @@ function validJson(a) {
 
 const fs = require("fs");
 
-module.exports = (client) => {
+module.exports = async (client) => {
   /*client.guilds.forEach(guild => {
     fs.readFile("prefixes/" + guild.id + ".txt", (err, file) => {
       if (err) {
@@ -144,5 +144,11 @@ module.exports = (client) => {
       }
     }
   });
+
+client.ws.on('INTERACTION_CREATE', async (interaction) => {
+  if(client.commands.get(interaction.data.name)) {
+    client.commands.get(interaction.data.name).run(client, { guild: client.guilds.cache.get(interaction.guild_id), channel: client.guilds.cache.get(interaction.guild_id).channels.cache.get(interaction.channel_id), member: client.guilds.cache.get(interaction.guild_id).members.cache.get(interaction.member.user.id), author: client.guilds.cache.get(interaction.guild_id).members.cache.get(interaction.member.user.id).user }, (interaction.data.options||[]).map(thing => thing.value), interaction);
+  }
+});
 
 };

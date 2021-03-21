@@ -1,4 +1,11 @@
-exports.run = async (client, message, args) => {
+exports.run = (client, message, args, interaction) => {
+if(interaction) {
+client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 5
+            },
+        });
+}
   if (!client.disabledFunctions.get(message.guild.id).includes("moderation")) {
     if (!client.disabledFunctions.get(message.guild.id).includes("purge")) {
       if (message.member.hasPermission("MANAGE_MESSAGES")) {
@@ -16,8 +23,7 @@ exports.run = async (client, message, args) => {
               },
             });
           } else {
-            message.delete().then(() => {
-              message.channel.bulkDelete(amount).then(() => {
+              message.channel.bulkDelete(amount + 1).then(() => {
                 if (amount == 1) {
                   message.channel
                     .send({
@@ -46,7 +52,6 @@ exports.run = async (client, message, args) => {
                     .then((m) => m.delete({ timeout: 1000 }));
                 }
               });
-            });
           }
         } else {
           message.channel.send({
@@ -79,3 +84,10 @@ exports.run = async (client, message, args) => {
 
 exports.category = "Moderation";
 exports.neededPerms = ["MANAGE_MESSAGES"];
+exports.syntax = "purge [messages]"
+exports.specialSlash = [{
+    name: 'Messages',
+    description: 'Description',
+    type: 4,
+    required: true
+  }];

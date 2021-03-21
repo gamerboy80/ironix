@@ -1,4 +1,11 @@
-exports.run = (client, message, args) => {
+exports.run = (client, message, args, interaction) => {
+if(interaction) {
+client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 5
+            },
+        });
+}
   var prefix = client.prefixes.get(message.guild.id);
   if (message.member.hasPermission("MANAGE_GUILD")) {
     if (args.join(" ") != "") {
@@ -109,20 +116,40 @@ exports.run = (client, message, args) => {
   }
 
   function isAChannelOrMember(s) {
+    if(!interaction) {
     if(/<#[0-9]{18}>/.test(s + "") == true) {
     return /<#[0-9]{18}>/.test(s + "");
   } else {
     return /<@![0-9]{18}>/.test(s + "");
   }
+} else {
+  return true;
+}
   }
 
   function getChannelOrMemberId(s) {
+    if(!interaction) {
     if(s.slice(2).startsWith("!")) {
       return s.slice(3).slice(0, -1);
     } else {
       return s.slice(2).slice(0, -1);
     }
+  } else {
+    return s;
+  }
   }
 };
 
-exports.category = "Rank";
+exports.category = "Settings";
+exports.syntax = "addAlias [alias] [command]";
+exports.specialSlash = [{
+    name: 'Channel',
+    description: 'Description',
+    type: 7,
+    required: false
+  }, {
+    name: 'Member',
+    description: 'Description',
+    type: 6,
+    required: false
+  }]

@@ -1,4 +1,11 @@
-exports.run = (client, message, args) => {
+exports.run = (client, message, args, interaction) => {
+if(interaction) {
+client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 5
+            },
+        });
+}
   var prefix = client.prefixes.get(message.guild.id);
 
   if (!client.disabledFunctions.get(message.guild.id).includes("moderation")) {
@@ -38,6 +45,20 @@ exports.run = (client, message, args) => {
             },
           });
           }
+        } else {
+          client.guilds.cache.get(interaction.guild_id).channels.cache.get(interaction.channel_id).send({
+            embed: {
+              color: 0xc85151,
+              description:
+                "Invalid syntax | CORRECT SYNTAX: " +
+                prefix +
+                "removeWarn [warn id]",
+              footer: {
+                text: `Requested by ${interaction.member.user.username}#${interaction.member.user.discriminator} (${interaction.member.user.id})`,
+                icon_url: client.users.cache.get(interaction.member.user.id).displayAvatarURL(),
+              },
+            },
+          });
         }
       } else {
         message.channel.send({
@@ -57,3 +78,10 @@ exports.run = (client, message, args) => {
 };
 
 exports.category = "Moderation";
+exports.syntax = "removeWarn [warn id]";
+exports.specialSlash = [{
+    name: 'WarnID',
+    description: 'Description',
+    type: 3,
+    required: true
+  }];

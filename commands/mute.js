@@ -1,4 +1,11 @@
-exports.run = (client, message, args) => {
+exports.run = (client, message, args, interaction) => {
+if(interaction) {
+client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 5
+            },
+        });
+}
   if (!client.disabledFunctions.get(message.guild.id).includes("moderation")) {
     if (!client.disabledFunctions.get(message.guild.id).includes("mute")) {
       var prefix = client.prefixes.get(message.guild.id);
@@ -42,7 +49,7 @@ exports.run = (client, message, args) => {
           muteNow();
         }
       } else {
-        message.channel.send({
+        if(message.author.id != client.user.id) message.channel.send({
           embed: {
             color: 0xc85151,
             description:
@@ -70,12 +77,13 @@ exports.run = (client, message, args) => {
           mention = mention.slice(1);
         }
 
-        return mention;
+        
       }
+      return mention;
     }
 
     if (message.member.hasPermission("KICK_MEMBERS")) {
-      if (message.mentions.members.first()) {
+      if (true) {
         if (args[2]) {
           client.users.fetch(getIdFromMention(args[0])).then((user) => {
             let time;
@@ -114,7 +122,7 @@ exports.run = (client, message, args) => {
             if (isMutable()) {
               const muteRole = message.guild.roles.cache.find((r) => r.name == "Muted-IX");
               if (client.mutes.get(message.guild.id).includes(user.id) && message.guild.members.cache.get(user.id).roles.cache.has(muteRole.id)) {
-                message.channel.send({
+                if(message.author.id != client.user.id) message.channel.send({
                   embed: {
                     color: 0xc85151,
                     description: "This user is already muted!",
@@ -170,7 +178,7 @@ exports.run = (client, message, args) => {
                       );
                   });
 
-                  message.channel.send({
+                  if(message.author.id != client.user.id) message.channel.send({
                     embed: {
                       color: 0x51c878,
                       description: user.tag + " was muted successfully.",
@@ -233,7 +241,7 @@ exports.run = (client, message, args) => {
                         );
                     });
 
-                    message.channel.send({
+                    if(message.author.id != client.user.id) message.channel.send({
                       embed: {
                         color: 0x51c878,
                         description: user.tag + " was muted successfully.",
@@ -244,7 +252,7 @@ exports.run = (client, message, args) => {
                       },
                     });
                   } else {
-                    message.channel.send({
+                    if(message.author.id != client.user.id) message.channel.send({
                       embed: {
                         color: 0xc85151,
                         description:
@@ -261,7 +269,7 @@ exports.run = (client, message, args) => {
                 }
               }
             } else {
-              message.channel.send({
+              if(message.author.id != client.user.id) message.channel.send({
                 embed: {
                   color: 0xc85151,
                   description: "You can't mute this user!",
@@ -274,7 +282,7 @@ exports.run = (client, message, args) => {
             }
           });
         } else {
-          message.channel.send({
+          if(message.author.id != client.user.id) message.channel.send({
             embed: {
               color: 0xc85151,
               description:
@@ -289,7 +297,7 @@ exports.run = (client, message, args) => {
           });
         }
       } else {
-        message.channel.send({
+        if(message.author.id != client.user.id) message.channel.send({
           embed: {
             color: 0xc85151,
             description:
@@ -334,3 +342,21 @@ exports.run = (client, message, args) => {
 
 exports.category = "Moderation";
 exports.neededPerms = ["MANAGE_ROLES"];
+exports.syntax = "mute [mention] [time (XdXhXmXs) / perm] [reason]\nLimit: 23d59h59m59s";
+exports.specialSlash = [{
+    name: 'User',
+    description: 'Description',
+    type: 6,
+    required: true
+  }, {
+    name: 'Time',
+    description: 'Description',
+    type: 3,
+    required: true
+  },
+  {
+    name: 'Reason',
+    description: 'Description',
+    type: 3,
+    required: true
+  }];

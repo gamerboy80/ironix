@@ -1,4 +1,11 @@
-exports.run = async (client, message, args) => {
+exports.run = async (client, message, args, interaction) => {
+if(interaction) {
+client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 5
+            },
+        });
+}
   if(!client.disabledFunctions.get(message.guild.id).includes("music")) {
     if(args.join(" ")) {
   let video = {};
@@ -106,3 +113,10 @@ if(!Array.isArray(client.queue[message.guild.id])) {
 
 
 exports.category = "Music";
+exports.syntax = "play [song]";
+exports.specialSlash = [{
+    name: 'Song',
+    description: 'Description',
+    type: 3,
+    required: true
+  }];

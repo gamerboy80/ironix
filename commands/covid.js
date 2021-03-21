@@ -1,6 +1,13 @@
 const needle = require("needle"); // hi, I broke some cammnds so I will be fixing them now, don't worry
 
-exports.run = (client, message, args) => {
+exports.run = (client, message, args, interaction) => {
+if(interaction) {
+client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 5
+            },
+        });
+}
   if(!client.disabledFunctions.get(message.guild.id).includes("covid")) {
   needle.get(
     "https://api.apify.com/v2/key-value-stores/tVaYRsPHLjNdNBu7S/records/LATEST?disableRedirect=true",

@@ -1,4 +1,11 @@
-exports.run = (client, message, args) => {
+exports.run = (client, message, args, interaction) => {
+if(interaction) {
+client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 5
+            },
+        });
+}
 	if(client.optedIn.get(message.author.id) != true) {
 		client.optedIn.set(message.author.id, true)
  message.channel.send({

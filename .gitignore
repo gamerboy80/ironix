@@ -3,3 +3,4 @@ Things
 data
 config.json
 package-lock.json
+*.traineddata

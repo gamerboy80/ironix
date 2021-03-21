@@ -1,4 +1,11 @@
-exports.run = (client, message, args) => {
+exports.run = (client, message, args, interaction) => {
+if(interaction) {
+client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 5
+            },
+        });
+}
   var prefix = client.prefixes.get(message.guild.id);
     if (client.commands.get(args[1])) {
       if (typeof client.aliases.get(message.author.id) === 'object') {
@@ -52,7 +59,7 @@ exports.run = (client, message, args) => {
           description:
             "Invalid syntax | CORRECT SYNTAX: " +
             prefix +
-            "addAlias [alias name] [command name]",
+            "addAlias [alias] [command]",
           footer: {
             text: `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
             icon_url: message.author.displayAvatarURL()
@@ -63,3 +70,15 @@ exports.run = (client, message, args) => {
 };
 
 exports.category = "Utility";
+exports.syntax = "addAlias [alias] [command]";
+exports.specialSlash = [{
+    name: 'Alias',
+    description: 'Description',
+    type: 3,
+    required: true
+  }, {
+    name: 'Command',
+    description: 'Description',
+    type: 3,
+    required: true
+  }];

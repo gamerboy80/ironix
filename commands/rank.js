@@ -1,6 +1,12 @@
-exports.run = async (client, message, args) => {
+exports.run = async (client, message, args, interaction) => {
+if(interaction) {
+client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 5
+            },
+        });
+}
   if (!client.disabledFunctions.get(message.guild.id).includes("rank")) {
-    (async () => {
       function getIdFromMention(mention) {
         if (!mention) {
           return;
@@ -13,8 +19,9 @@ exports.run = async (client, message, args) => {
             mention = mention.slice(1);
           }
 
-          return mention;
+          
         }
+        return mention;
       }
 
       function createUUID() {
@@ -199,7 +206,7 @@ exports.run = async (client, message, args) => {
             });
           });
         }
-      } else if (message.mentions.members.first()) {
+      } else if (true) {
         var rankData = client.rankData.get(message.guild.id, getIdFromMention(args[0]));
 
         if(!message.guild.members.cache.get(getIdFromMention(args[0])).user.bot) {
@@ -320,8 +327,14 @@ exports.run = async (client, message, args) => {
           );
       }
       }
-    })();
   }
 };
 
 exports.category = "Rank";
+exports.syntax = "rank [optional user]";
+exports.specialSlash = [{
+    name: 'User',
+    description: 'Description',
+    type: 6,
+    required: false
+  }];

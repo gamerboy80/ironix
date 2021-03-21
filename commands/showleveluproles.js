@@ -1,4 +1,11 @@
-exports.run = (client, message, args) => {
+exports.run = (client, message, args, interaction) => {
+if(interaction) {
+client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 5
+            },
+        });
+}
   if (
     Object.keys(client.leveluproles.get(message.guild.id)) != "" &&
     typeof client.leveluproles.get(message.guild.id) === "object"
@@ -37,4 +44,4 @@ exports.run = (client, message, args) => {
   }
 };
 
-exports.category = "Rank";
+exports.category = "Settings";

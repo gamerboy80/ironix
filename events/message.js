@@ -65,6 +65,7 @@ if (!prefix) {
   if (!Array.isArray(client.xpblocked.get(message.guild.id))) {
     iss = true;
     iss2 = true;
+    iss3 = true;
   } else {
     iss = !client.xpblocked
       .get(message.guild.id)
@@ -72,13 +73,16 @@ if (!prefix) {
       iss2 = !client.xpblocked
       .get(message.guild.id)
       .includes(message.author.id);
+      iss3 = !client.xpblocked
+      .get(message.guild.id)
+      .includes(message.channel.parentID);
   }
   if (!Array.isArray(client.disabledFunctions.get(message.guild.id))) {
     client.disabledFunctions.set(message.guild.id, []);
   }
   if (
     !client.disabledFunctions.get(message.guild.id).includes("rank") &&
-    iss === true && iss2 == true
+    iss == true && iss2 == true && iss3 == true
   ) {
     try {
       var idk = client.rankData.get(message.guild.id, message.author.id);
@@ -236,36 +240,7 @@ client.usersOnCountdown.set(message.author.id);
           } catch(error) {
             console.log(error);
             
-            if(client.optedIn.get(message.author.id) == true) {
-              let bugReport = {};
-        bugReport.command = message.content;
-        bugReport.error = error.stack.toString();
-        bugReport.guild = message.guild;
-        bugReport.channel = message.channel;
-        bugReport.user = message.author;
-        require("fs").writeFileSync("./bugreports/" + Date.now() + ".txt", JSON.stringify(bugReport, null, 1).replace(/\\n    /g, "\n"))
-              message.channel.send({
-          embed: {
-            color: 0xc85151,
-            description: 'Something went terribly wrong, please try again later. As you opted-in our optional "bug reports" data collection, our team got informed. Thank you!',
-            footer: {
-              text: `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
-              icon_url: message.author.displayAvatarURL()
-            }
-          }
-        });
-            } else {
-            message.channel.send({
-          embed: {
-            color: 0xc85151,
-            description: "Something went terribly wrong, please try again later.",
-            footer: {
-              text: `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
-              icon_url: message.author.displayAvatarURL()
-            }
-          }
-        });
-          }
+            client.bugCheck(message, error);
           }
           } else {
             message.channel.send({
@@ -286,40 +261,11 @@ client.usersOnCountdown.set(message.author.id);
       cmd.run(client, message, args);
     } catch(error) {
       console.log(error);
-      if(client.optedIn.get(message.author.id) == true) {
-        let bugReport = {};
-        bugReport.command = message.content;
-        bugReport.error = error.stack.toString();
-        bugReport.guild = message.guild;
-        bugReport.channel = message.channel;
-        bugReport.user = message.author;
-        require("fs").writeFileSync("./bugreports/" + Date.now() + ".txt", JSON.stringify(bugReport, null, 1).replace(/\\n    /g, "\n"))
-              message.channel.send({
-          embed: {
-            color: 0xc85151,
-            description: 'Something went terribly wrong, please try again later. As you opted-in our optional "bug reports" data collection, our team got informed. Thank you!',
-            footer: {
-              text: `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
-              icon_url: message.author.displayAvatarURL()
-            }
-          }
-        });
-            } else {
-            message.channel.send({
-          embed: {
-            color: 0xc85151,
-            description: "Something went terribly wrong, please try again later.",
-            footer: {
-              text: `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
-              icon_url: message.author.displayAvatarURL()
-            }
-          }
-        });
-          }
-    }
+      client.bugCheck(message, error);
     }
     setTimeout(() => {
       client.usersOnCountdown.delete(message.author.id);
     }, 1000);
   }
+}
 };

@@ -1,4 +1,11 @@
-exports.run = (client, message, args) => {
+exports.run = (client, message, args, interaction) => {
+if(interaction) {
+client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 5
+            },
+        });
+}
   if(!client.disabledFunctions.get(message.guild.id).includes("moderation")) {
     if(!client.disabledFunctions.get(message.guild.id).includes("ban")) {
   var prefix = client.prefixes.get(message.guild.id);
@@ -47,7 +54,7 @@ var thing = client.tempBans.get(message.guild.id) || {}; // probably copy this M
           embed: {
             color: 0xc85151,
             description:
-              "Invalid syntax | CORRECT SYNTAX: " + prefix + "unban [id]",
+              "Invalid syntax | CORRECT SYNTAX: " + prefix + "unban [user id]",
             footer: {
               text: `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
               icon_url: message.author.displayAvatarURL()
@@ -76,3 +83,10 @@ var thing = client.tempBans.get(message.guild.id) || {}; // probably copy this M
 
 exports.category = "Moderation";
 exports.neededPerms = ["BAN_MEMBERS"];
+exports.syntax = "unban [user id]";
+exports.specialSlash = [{
+    name: 'UserID',
+    description: 'Description',
+    type: 3,
+    required: true
+  }];

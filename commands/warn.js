@@ -1,4 +1,11 @@
-exports.run = (client, message, args) => {
+exports.run = (client, message, args, interaction) => {
+if(interaction) {
+client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 5
+            },
+        });
+}
   var prefix = client.prefixes.get(message.guild.id);
 
   if (!client.disabledFunctions.get(message.guild.id).includes("moderation")) {
@@ -15,12 +22,13 @@ exports.run = (client, message, args) => {
             mention = mention.slice(1);
           }
 
-          return mention;
+          
         }
+        return mention;
       }
 
       if (message.member.hasPermission("KICK_MEMBERS")) {
-        if (message.mentions.members.first()) {
+        if (true) {
           if (args[1]) {
             client.users.fetch(getIdFromMention(args[0])).then((user) => {
               let reason = args; 
@@ -124,3 +132,15 @@ exports.run = (client, message, args) => {
 };
 
 exports.category = "Moderation";
+exports.syntax = "warn [user] [reason]";
+exports.specialSlash = [{
+    name: 'User',
+    description: 'Description',
+    type: 6,
+    required: true
+  }, {
+    name: 'Reason',
+    description: 'Description',
+    type: 3,
+    required: true
+  }];

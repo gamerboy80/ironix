@@ -1,4 +1,11 @@
-exports.run = (client, message, args) => {
+exports.run = (client, message, args, interaction) => {
+if(interaction) {
+client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 5
+            },
+        });
+}
   if(!client.disabledFunctions.get(message.guild.id).includes("moderation")) {
     if(!client.disabledFunctions.get(message.guild.id).includes("mute")) {
   const fs = require("fs");
@@ -15,12 +22,13 @@ exports.run = (client, message, args) => {
         mention = mention.slice(1);
       }
 
-      return mention;
+      
     }
+    return mention;
   }
 
   if (message.member.hasPermission("KICK_MEMBERS")) {
-    if (message.mentions.members.first()) {
+    if (true) {
       if (args[0]) {
         client.users.fetch(getIdFromMention(args[0])).then(user => {
           const muteRole = message.guild.roles.cache.find(r => r.name == "Muted-IX");
@@ -58,7 +66,7 @@ exports.run = (client, message, args) => {
                 );
             });
 
-            message.channel.send({
+            if(message.author.id != client.user.id) message.channel.send({
               embed: {
                 color: 0x51c878,
                 description:
@@ -90,7 +98,7 @@ exports.run = (client, message, args) => {
                 );
             });
 
-            message.channel.send({
+            if(message.author.id != client.user.id) message.channel.send({
               embed: {
                 color: 0x51c878,
                 description:
@@ -103,7 +111,7 @@ exports.run = (client, message, args) => {
               }
             });
             } else {
-            message.channel.send({
+            if(message.author.id != client.user.id) message.channel.send({
               embed: {
                 color: 0xc85151,
                 description: "This user isn't muted!",
@@ -118,7 +126,7 @@ exports.run = (client, message, args) => {
         });
       }
     } else {
-      message.channel.send({
+      if(message.author.id != client.user.id) message.channel.send({
         embed: {
           color: 0xc85151,
           description:
@@ -131,7 +139,7 @@ exports.run = (client, message, args) => {
       });
     }
   } else {
-    message.channel.send({
+    if(message.author.id != client.user.id) message.channel.send({
       embed: {
         color: 0xc85151,
         description:
@@ -149,3 +157,10 @@ exports.run = (client, message, args) => {
 
 exports.category = "Moderation";
 exports.neededPerms = ["MANAGE_ROLES"];
+exports.syntax = "unmute [mention]";
+exports.specialSlash = [{
+    name: 'User',
+    description: 'Description',
+    type: 6,
+    required: true
+  }];

@@ -1,7 +1,15 @@
-exports.run = (client, message, args) => {
+exports.run = (client, message, args, interaction) => {
+if(interaction) {
+client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 5
+            },
+        });
+}
   var prefix = client.prefixes.get(message.guild.id);
   if (message.member.hasPermission("MANAGE_GUILD")) {
     if (a(args[0])) {
+      if((message.guild.channels.cache.get(b(args[0])) || {}).type == "text") {
       client.inspection.set(message.guild.id, b(args[0]));
       message.channel.send({
         embed: {
@@ -13,6 +21,21 @@ exports.run = (client, message, args) => {
           }
         }
       });
+    } else {
+      message.channel.send({
+        embed: {
+          color: 0xc85151,
+          description:
+            "Invalid syntax | CORRECT SYNTAX: " +
+            prefix +
+            "setupInspection [channel mention]",
+          footer: {
+            text: `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
+            icon_url: message.author.displayAvatarURL()
+          }
+        }
+      });
+    }
     } else {
       if(args[0] != null || client.inspection.get(message.guild.id) == "" || client.inspection.get(message.guild.id) == undefined) {
       message.channel.send({
@@ -55,14 +78,30 @@ exports.run = (client, message, args) => {
       }
     });
   }
-};
-
-exports.category = "Settings";
-
-function a(s) {
-  return /<#[0-9]{18}>/.test(s + "");
+  function a(s) {
+  if(!interaction) {
+    return /<#[0-9]{18}>/.test(s + "");
+  } else {
+    return true;
+  }
 }
 
 function b(s) {
-  return s.slice(2).slice(0, -1);
+  if(!interaction) {
+    return s.slice(2).slice(0, -1);
+  } else {
+    return s;
+  }
 }
+
+};
+
+exports.category = "Settings";
+exports.syntax = "setupInspection [channel mention]";
+exports.specialSlash = [{
+    name: 'Channel',
+    description: 'Description',
+    type: 7,
+    required: false
+  }];
+  

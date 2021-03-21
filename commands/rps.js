@@ -1,4 +1,11 @@
-exports.run = (client, message, args) => {
+exports.run = (client, message, args, interaction) => {
+if(interaction) {
+client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 5
+            },
+        });
+}
   if(!client.disabledFunctions.get(message.guild.id).includes("fun")) {
   if(!client.disabledFunctions.get(message.guild.id).includes("rps")) {
   const answerInNumbers = Math.floor(Math.random() * (Math.floor(3) - Math.ceil(1) + 1)) + Math.ceil(1);
@@ -58,3 +65,10 @@ exports.run = (client, message, args) => {
 };
 
 exports.category = "Fun";
+exports.syntax = "rps [rock / paper / scissors]";
+exports.specialSlash = [{
+    name: 'RockPaperScissors',
+    description: 'Description',
+    type: 3,
+    required: true
+  }];

@@ -1,4 +1,11 @@
-exports.run = (client, message, args) => {
+exports.run = (client, message, args, interaction) => {
+if(interaction) {
+client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 5
+            },
+        });
+}
   if (!client.disabledFunctions.get(message.guild.id).includes("poll")) {
     var prefix = client.prefixes.get(message.guild.id);
     var everyone = /@everyone/g;
@@ -156,3 +163,68 @@ exports.run = (client, message, args) => {
 };
 
 exports.category = "Utility";
+exports.syntax = "\nAny of those options:\n" +
+            "poll [question] [options] (separate via " +
+            '"' +
+            ") like " +
+            '"Which?" "Dog" "Cat" (maximum of 20 options)\n' +
+            "poll [question] (separate via " +
+            '"' +
+            '"' +
+            ")";
+exports.specialSlash = [{
+    name: 'Question',
+    description: 'Description',
+    type: 3,
+    required: true
+  }, {
+    name: 'Option1',
+    description: 'Description',
+    type: 3,
+    required: false
+  },
+  {
+    name: 'Option2',
+    description: 'Description',
+    type: 3,
+    required: false
+  }, {
+    name: 'Option3',
+    description: 'Description',
+    type: 3,
+    required: false
+  },
+  {
+    name: 'Option4',
+    description: 'Description',
+    type: 3,
+    required: false
+  }, {
+    name: 'Option5',
+    description: 'Description',
+    type: 3,
+    required: false
+  },
+  {
+    name: 'Option ',
+    description: 'Description',
+    type: 3,
+    required: false
+  }, {
+    name: 'Option7',
+    description: 'Description',
+    type: 3,
+    required: false
+  },
+  {
+    name: 'Option8',
+    description: 'Description',
+    type: 3,
+    required: false
+  },
+  {
+    name: 'Option9',
+    description: 'Description',
+    type: 3,
+    required: false
+  }];

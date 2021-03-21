@@ -139,40 +139,11 @@ if(message.content.length > 1024) {
             .replace(/_/g, "")
         ).includes(client.blocklist.get(message.guild.id)[i]))
       ) {
-        client.wasFiltered = true;
         message.delete().then(m =>
           message.channel
             .send("<@" + message.author.id + ">, this word is blocklisted!")
             .then(async mmm => {
               mm = mmm;
-              if (
-                message.guild.channels.cache.get(client.logs.get(message.guild.id)) !=
-                undefined
-              ) {
-                var res;
-if(message.content.length > 1024) {
-      res = await require("node-fetch")(
-        "https://hastebin.com/documents",
-        {
-          method: "POST",
-          body: message.content,
-          headers: { "Content-Type": "text/plain" }
-        }
-      ).then(res => res.json().then(json => { key1 = json[Object.keys(json)[0]]; }));
-    }
-
-                const embed = new (require("discord.js").MessageEmbed)()
-    .setColor(0x51c878)
-    .setAuthor(message.author.tag, message.author.displayAvatarURL())
-    .setFooter("User ID: " + message.author.id)
-    .setTimestamp(message.createdAt)
-    .setDescription("**Blocklisted word said in <#" + message.channel.id + ">**")
-    .addField("Filtered message:\n", ((message.content.length > 1024) ? "[Open message in a new tab]" + "(https://hastebin.com/" + key1  + ")" : message.content))
-    .addField("Filtered word:\n", client.blocklist.get(message.guild.id)[i]);
-
-    message.guild.channels.cache
-                  .get(client.logs.get(message.guild.id)).send({ embed });
-              }
             })
             .then(mmmm => mm.delete({ timeout: 3000 }))
         );

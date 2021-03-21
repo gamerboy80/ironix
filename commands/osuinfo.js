@@ -1,4 +1,11 @@
-exports.run = (client, message, args) => {
+exports.run = (client, message, args, interaction) => {
+if(interaction) {
+client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 5
+            },
+        });
+}
   var prefix = client.prefixes.get(message.guild.id);
   const osu = require('node-osu');
   const osuApi = new osu.Api(client.config.osu);
@@ -55,3 +62,10 @@ exports.run = (client, message, args) => {
 };
 
 exports.category = "Utility";
+exports.syntax = "osuInfo [username]";
+exports.specialSlash = [{
+    name: 'Username',
+    description: 'Description',
+    type: 3,
+    required: true
+  }];

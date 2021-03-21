@@ -1,4 +1,11 @@
-exports.run = (client, message, args) => {
+exports.run = (client, message, args, interaction) => {
+if(interaction) {
+client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 5
+            },
+        });
+}
   var prefix = client.prefixes.get(message.guild.id);
 
   function getIdFromMention(mention) {
@@ -13,8 +20,9 @@ exports.run = (client, message, args) => {
         mention = mention.slice(1);
       }
 
-      return mention;
+      
     }
+    return mention;
   }
 
     if (getIdFromMention(args[0]) != undefined) {
@@ -116,3 +124,10 @@ exports.run = (client, message, args) => {
 };
 
 exports.category = "Utility";
+exports.syntax = "userinfo [optional user]"
+exports.specialSlash = [{
+    name: 'User',
+    description: 'Description',
+    type: 6,
+    required: false
+  }];

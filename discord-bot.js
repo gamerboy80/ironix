@@ -189,7 +189,7 @@ app.get("/privacy*", (req, res) => {
 
 app.get("/invite*", (req, res) => {
   res.redirect(
-    "https://discord.com/api/oauth2/authorize?client_id=715986550596567121&permissions=8&scope=bot"
+    "https://discord.com/api/oauth2/authorize?client_id=" + client.user.id + "&permissions=8&scope=bot%20applications.commands"
   );
 });
 
@@ -269,7 +269,8 @@ client.tADisabled = [
   "filters",
   "warn",
   "messeveryone",
-  "music"
+  "music",
+  "toxicity"
 ];
 client.xpblocked = new enmap({ name: "xpblocked" });
 client.rankcolour = new enmap({ name: "rankcolour" });
@@ -335,8 +336,6 @@ client.music = [
   "volume"
 ];
 
-client.wasFiltered = null;
-
 client.queue = {};
 client.dispatcher = {};
 client.playSong = function(video, message) {
@@ -378,9 +377,42 @@ client.playSong = function(video, message) {
           }
         });
     }
-  }
+  };
 
-client.version = "1.8";
+  client.bugCheck = function(message, error) {
+if(client.optedIn.get(message.author.id) == true) {
+        let bugReport = {};
+        bugReport.command = message.content;
+        bugReport.error = error.stack.toString();
+        bugReport.guild = message.guild;
+        bugReport.channel = message.channel;
+        bugReport.user = message.author;
+        require("fs").writeFileSync("./bugreports/" + Date.now() + ".json", JSON.stringify(bugReport, null, 1).replace(/(?:\r\n|\r|\n)/g, "\n"))
+              message.channel.send({
+          embed: {
+            color: 0xc85151,
+            description: 'Something went terribly wrong, please try again later. As you opted-in our optional "bug reports" data collection, our team got informed. Thank you!',
+            footer: {
+              text: `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
+              icon_url: message.author.displayAvatarURL()
+            }
+          }
+        });
+            } else {
+            message.channel.send({
+          embed: {
+            color: 0xc85151,
+            description: "Something went terribly wrong, please try again later.",
+            footer: {
+              text: `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
+              icon_url: message.author.displayAvatarURL()
+            }
+          }
+        });
+  }
+};
+
+client.version = "2.0 DEV";
 
 fs.readdir("./events/", (err, files) => {
   if (err) return console.error(err);

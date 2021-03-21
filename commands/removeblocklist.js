@@ -1,4 +1,11 @@
-exports.run = (client, message, args) => {
+exports.run = (client, message, args, interaction) => {
+if(interaction) {
+client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 5
+            },
+        });
+}
   var prefix = client.prefixes.get(message.guild.id);
   if (Array.isArray(client.blocklist.get(message.guild.id)) == false) {
     client.blocklist.set(message.guild.id, []);
@@ -68,3 +75,10 @@ exports.run = (client, message, args) => {
 };
 
 exports.category = "Blocklist";
+exports.syntax = "removeblocklist [word]";
+exports.specialSlash = [{
+    name: 'Word',
+    description: 'Description',
+    type: 3,
+    required: true
+  }];

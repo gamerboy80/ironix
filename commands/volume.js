@@ -1,4 +1,11 @@
-exports.run = (client, message, args) => {
+exports.run = (client, message, args, interaction) => {
+if(interaction) {
+client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 5
+            },
+        });
+}
   if(!client.disabledFunctions.get(message.guild.id).includes("music")) {
 	if(message.member.roles.cache.find(role => role.name === "Music Master") || message.member.hasPermission("MANAGE_GUILD")) {
   if(client.dispatcher[message.guild.id]) {
@@ -55,3 +62,10 @@ exports.run = (client, message, args) => {
 };
 
 exports.category = "Music";
+exports.syntax = "volume [volume]"
+exports.specialSlash = [{
+    name: 'Volume',
+    description: 'Description',
+    type: 4,
+    required: true
+  }];

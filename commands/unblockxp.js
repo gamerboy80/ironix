@@ -1,4 +1,11 @@
-exports.run = (client, message, args) => {
+exports.run = (client, message, args, interaction) => {
+if(interaction) {
+client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 5
+            },
+        });
+}
   var prefix = client.prefixes.get(message.guild.id);
   if (Array.isArray(client.xpblocked.get(message.guild.id)) == false) {
     client.xpblocked.set(message.guild.id, []);
@@ -67,13 +74,30 @@ exports.run = (client, message, args) => {
   }
 
   function getChannelOrMemberId(s) {
+    if(!interaction) {
     if(s.slice(2).startsWith("!")) {
       return s.slice(3).slice(0, -1);
     } else {
       return s.slice(2).slice(0, -1);
     }
+  } else {
+    return s;
   }
+  }
+
 
 };
 
-exports.category = "Rank";
+exports.category = "Settings";
+exports.syntax = "unblockXP [channel / member]";
+exports.specialSlash = [{
+    name: 'Channel',
+    description: 'Description',
+    type: 7,
+    required: false
+  }, {
+    name: 'Member',
+    description: 'Description',
+    type: 6,
+    required: false
+  }]

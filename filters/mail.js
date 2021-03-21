@@ -21,33 +21,11 @@ exports.run = (client, message, args) => {
           .replace(/_/g, "")
       ).match(regex)
     ) {
-      client.wasFiltered = true;
       message.delete().then((m) =>
         message.channel
           .send("<@" + message.author.id + ">, no mails allowed!")
           .then(async (mmm) => {
             mm = mmm;
-            if (
-              message.guild.channels.cache.get(client.logs.get(message.guild.id)) !=
-              undefined
-            ) {
-              const embed = new (require("discord.js").MessageEmbed)()
-                .setColor(0x51c878)
-                .setAuthor(message.author.tag, message.author.displayAvatarURL())
-                .setFooter("User ID: " + message.author.id)
-                .setTimestamp(
-                  new Date(Number(message.id) / 4194304 + 1420070400000)
-                )
-                .setDescription(
-                  "**Mail said in <#" +
-                    message.channel.id +
-                    ">**\nWe will hide it for privacy reasons."
-                );
-
-              message.guild.channels.cache
-                .get(client.logs.get(message.guild.id))
-                .send({ embed });
-            }
           })
           .then((mmmm) => mm.delete({ timeout: 3000 }))
       );

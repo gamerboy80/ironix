@@ -1,4 +1,11 @@
-exports.run = (client, message, args) => {
+exports.run = (client, message, args, interaction) => {
+if(interaction) {
+client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 5
+            },
+        });
+}
   var isColor = require("is-color");
   if (isColor(args.join(" "))) {
     client.rankcolour.set(message.author.id, args.join(" "));
@@ -41,3 +48,10 @@ exports.run = (client, message, args) => {
 };
 
 exports.category = "Rank";
+exports.syntax = "rankColour [optional colour]"
+exports.specialSlash = [{
+    name: 'Colour',
+    description: 'Description',
+    type: 3,
+    required: false
+  }];

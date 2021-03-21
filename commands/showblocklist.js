@@ -1,4 +1,11 @@
-exports.run = (client, message, args) => {
+exports.run = (client, message, args, interaction) => {
+if(interaction) {
+client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 5
+            },
+        });
+}
   if (message.member.hasPermission("MANAGE_GUILD")) {
     if (client.blocklist.get(message.guild.id).length != 0) {
       message.channel.send({

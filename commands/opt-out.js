@@ -1,6 +1,12 @@
-exports.run = (client, message, args) => {
+exports.run = (client, message, args, interaction) => {
+if(interaction) {
+client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 5
+            },
+        });
+}
  if(client.optedIn.get(message.author.id) != true) {
-  client.optedIn.set(message.author.id, false)
  message.channel.send({
               embed: {
                 color: 0xc85151,
@@ -12,6 +18,7 @@ exports.run = (client, message, args) => {
               },
             });
 } else {
+  client.optedIn.set(message.author.id, false)
   message.channel.send({
               embed: {
                 color: 0x51c878,

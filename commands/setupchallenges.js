@@ -1,4 +1,11 @@
-exports.run = (client, message, args) => {
+exports.run = (client, message, args, interaction) => {
+if(interaction) {
+client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 5
+            },
+        });
+}
 	var prefix = client.prefixes.get(message.guild.id);
 
 	if (!message.member.hasPermission("MANAGE_GUILD")) {
@@ -17,7 +24,7 @@ exports.run = (client, message, args) => {
 	}
 	if (args[0]) {
 		var c = message.guild.channels.resolve(b(args[0]));
-		if (c) {
+		if((message.guild.channels.cache.get(b(args[0])) || {}).type == "text") {
 			client.challenges.set(message.guild.id, {
                 channel: c.id,
                 challenge: 1,
@@ -77,8 +84,20 @@ exports.run = (client, message, args) => {
     });
 		} // make this remove it if you want
 	}
-};
-function b(s) {
+
+  function b(s) {
+  if(!interaction) {
   return s.slice(2).slice(0, -1);
+} else {
+  return s;
 }
+}
+};
 exports.category = "Settings";
+exports.syntax = "setupChallenge [channel mention]";
+exports.specialSlash = [{
+    name: 'Channel',
+    description: 'Description',
+    type: 7,
+    required: false
+  }];

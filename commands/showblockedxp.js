@@ -1,4 +1,11 @@
-exports.run = (client, message, args) => {
+exports.run = (client, message, args, interaction) => {
+if(interaction) {
+client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 5
+            },
+        });
+}
   if (message.member.hasPermission("MANAGE_GUILD")) {
     let blockedL = [];
     if(client.xpblocked.get(message.guild.id) != undefined) {
@@ -57,4 +64,4 @@ exports.run = (client, message, args) => {
   }
 };
 
-exports.category = "Rank";
+exports.category = "Settings";

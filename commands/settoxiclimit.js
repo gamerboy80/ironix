@@ -1,4 +1,11 @@
-exports.run = (client, message, args) => {
+exports.run = (client, message, args, interaction) => {
+if(interaction) {
+client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 5
+            },
+        });
+}
   var prefix = client.prefixes.get(message.guild.id);
   if (message.member.hasPermission("MANAGE_GUILD")) {
     if (!isNaN(Number(args[0])) && Number(args[0]) != 0) {
@@ -58,3 +65,10 @@ exports.run = (client, message, args) => {
 };
 
 exports.category = "Settings";
+exports.syntax = "setToxicLimit [toxic limit (0.x)]";
+exports.specialSlash = [{
+    name: 'ToxicLimit',
+    description: 'Description',
+    type: 3,
+    required: true
+  }];

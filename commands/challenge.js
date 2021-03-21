@@ -1,4 +1,11 @@
-exports.run = (client, message, args) => {
+exports.run = (client, message, args, interaction) => {
+if(interaction) {
+client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 5
+            },
+        });
+}
 var prefix = client.prefixes.get(message.guild.id);
 
 	var { channel, challenge } = client.challenges.get(message.guild.id);
@@ -71,3 +78,35 @@ function getFormattedDate(date) {
 	return `${month}/${day}/${year} ${date.getHours().toString()}:00`;
 }
 exports.category = "Challenges";
+exports.syntax = "challenge [type] [rules] [challenge] [deadline in days] [answer format] [extra info]\nUse _ to separate (example: write 'hello world' as 'hello_world') and use | to separate rules.";
+exports.specialSlash = [{
+    name: 'Type',
+    description: 'Description',
+    type: 3,
+    required: true
+  }, {
+    name: 'Rules',
+    description: 'Description',
+    type: 3,
+    required: true
+  }, {
+    name: 'Challenge',
+    description: 'Description',
+    type: 3,
+    required: true
+  }, {
+    name: 'Deadline',
+    description: 'Description',
+    type: 3,
+    required: true
+  }, {
+    name: 'AnswerFormat',
+    description: 'Description',
+    type: 3,
+    required: true
+  }, {
+    name: 'ExtraInfo',
+    description: 'Description',
+    type: 3,
+    required: false
+  }]

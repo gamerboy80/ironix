@@ -1,4 +1,11 @@
-exports.run = (client, message, args) => {
+exports.run = (client, message, args, interaction) => {
+if(interaction) {
+client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 5
+            },
+        });
+}
   if(!client.disabledFunctions.get(message.guild.id).includes("moderation")) {
   if(!client.disabledFunctions.get(message.guild.id).includes("kick")) {
   var prefix = client.prefixes.get(message.guild.id);
@@ -14,12 +21,13 @@ exports.run = (client, message, args) => {
         mention = mention.slice(1);
       }
 
-      return mention;
+      
     }
+    return mention;
   }
 
   if (message.member.permissions.has("KICK_MEMBERS")) {
-    if (message.mentions.members.first()) {
+    if (true) {
       if (args[0]) {
         client.users.fetch(getIdFromMention(args[0])).then(user => {
           const preMessageReady = args;
@@ -127,3 +135,16 @@ exports.run = (client, message, args) => {
 
 exports.category = "Moderation";
 exports.neededPerms = ["KICK_MEMBERS"];
+exports.syntax = "kick [mention] [reason]";
+exports.specialSlash = [{
+    name: 'User',
+    description: 'Description',
+    type: 6,
+    required: true
+  },
+  {
+    name: 'Reason',
+    description: 'Description',
+    type: 3,
+    required: true
+  }];

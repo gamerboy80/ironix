@@ -1,4 +1,11 @@
-exports.run = (client, message, args) => {
+exports.run = (client, message, args, interaction) => {
+if(interaction) {
+client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 5
+            },
+        });
+}
   if (!client.disabledFunctions.get(message.guild.id).includes("suggest")) {
     var prefix = client.prefixes.get(message.guild.id);
     if (message.member.hasPermission("MANAGE_GUILD")) {
@@ -86,7 +93,7 @@ exports.run = (client, message, args) => {
                   description:
                     "Invalid syntax | CORRECT SYNTAX: " +
                     prefix +
-                    "approve [Suggestion ID] [reason]",
+                    "deny [Suggestion ID] [reason]",
                   footer: {
                     text: `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
                     icon_url: message.author.displayAvatarURL(),
@@ -124,3 +131,15 @@ exports.run = (client, message, args) => {
 };
 
 exports.category = "Suggestions";
+exports.syntax = "deny [Suggestion ID] [reason]";
+exports.specialSlash = [{
+    name: 'SuggestionID',
+    description: 'Description',
+    type: 3,
+    required: true
+  }, {
+    name: 'Reason',
+    description: 'Description',
+    type: 3,
+    required: true
+  }]

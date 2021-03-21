@@ -1,5 +1,12 @@
-exports.run = (client, message, args) => {
-    if (client.aliases.get(message.author.id).length != 0) {
+exports.run = (client, message, args, interaction) => {
+if(interaction) {
+client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 5
+            },
+        });
+}
+    if (Object.keys(client.aliases.get(message.author.id)).length != 0) {
       message.channel.send({
         embed: {
           color: 0x51c878,

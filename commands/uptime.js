@@ -1,4 +1,11 @@
-exports.run = (client, message, args) => {
+exports.run = (client, message, args, interaction) => {
+if(interaction) {
+client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 5
+            },
+        });
+}
   if (process.platform == "win32") {
     require("child_process").exec(
       "wmic path Win32_OperatingSystem get LastBootUpTime",

@@ -1,4 +1,11 @@
-exports.run = (client, message, args) => {
+exports.run = (client, message, args, interaction) => {
+if(interaction) {
+client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 5
+            },
+        });
+}
   if (!client.disabledFunctions.get(message.guild.id).includes("moderation")) {
     if (!client.disabledFunctions.get(message.guild.id).includes("ban")) {
       var prefix = client.prefixes.get(message.guild.id);
@@ -14,12 +21,13 @@ exports.run = (client, message, args) => {
             mention = mention.slice(1);
           }
 
-          return mention;
+         
         }
+         return mention;
       }
 
       if (message.member.hasPermission("BAN_MEMBERS")) {
-        if (message.mentions.members.first()) {
+        if (true) {
           if (args[2]) {
             client.users.fetch(getIdFromMention(args[0])).then((user) => {
               let time;
@@ -262,3 +270,21 @@ exports.run = (client, message, args) => {
 
 exports.category = "Moderation";
 exports.neededPerms = ["BAN_MEMBERS"];
+exports.syntax = "addAlias [alias] [command]";
+exports.specialSlash = [{
+    name: 'User',
+    description: 'Description',
+    type: 6,
+    required: true
+  }, {
+    name: 'Time',
+    description: 'Description',
+    type: 3,
+    required: true
+  },
+  {
+    name: 'Reason',
+    description: 'Description',
+    type: 3,
+    required: true
+  }];

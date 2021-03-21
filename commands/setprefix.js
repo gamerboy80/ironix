@@ -1,4 +1,11 @@
-exports.run = (client, message, args) => {
+exports.run = (client, message, args, interaction) => {
+if(interaction) {
+client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 5
+            },
+        });
+}
   if (message.member.hasPermission("MANAGE_GUILD")) {
     client.prefixes.set(message.guild.id, args.join(" "));
     message.channel.send({
@@ -27,3 +34,10 @@ exports.run = (client, message, args) => {
 };
 
 exports.category = "Settings";
+exports.syntax = "setPrefix [prefix]"
+exports.specialSlash = [{
+    name: 'Prefix',
+    description: 'Description',
+    type: 3,
+    required: true
+  }];

@@ -3,7 +3,14 @@ const { MessageEmbed } = require("discord.js");
 const ojsama = require("ojsama");
 const fs = require("fs");
 const { uniqBy } = require("lodash");
-exports.run = (client, message, args) => {
+exports.run = (client, message, args, interaction) => {
+if(interaction) {
+client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 5
+            },
+        });
+}
   var prefix = client.prefixes.get(message.guild.id);
 	if (args[0]) {
 			axios
@@ -12,17 +19,19 @@ exports.run = (client, message, args) => {
 					bruh(resp.data, message, args);
 				})
 				.catch((err) => {
-					console.error(err);
 					message.channel.send({
-          embed: {
-            color: 0xc85151,
-            description: "Something went terribly wrong, please try again later.",
-            footer: {
-              text: `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
-              icon_url: message.author.displayAvatarURL()
-            }
-          }
-        });
+        embed: {
+          color: 0xc85151,
+          description:
+            "Invalid syntax | CORRECT SYNTAX: " +
+            prefix +
+            "osuPP [beatmap id]",
+          footer: {
+            text: `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
+            icon_url: message.author.displayAvatarURL(),
+          },
+        },
+      });
 				});
 	} else message.channel.send({
         embed: {
@@ -66,3 +75,10 @@ function bruh(map, message, args) {
 	message.channel.send(embed);
 }
 exports.category = "Utility";
+exports.syntax = "osuPP [beatmap id]";
+exports.specialSlash = [{
+    name: 'BeatmapID',
+    description: 'Description',
+    type: 3,
+    required: true
+  }];

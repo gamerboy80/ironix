@@ -1,4 +1,11 @@
-exports.run = (client, message, args) => {
+exports.run = (client, message, args, interaction) => {
+if(interaction) {
+client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 5
+            },
+        });
+}
   var prefix = client.prefixes.get(message.guild.id);
   if (message.member.hasPermission("MANAGE_GUILD")) {
     if (args.join(" ") != "") {
@@ -91,3 +98,10 @@ exports.run = (client, message, args) => {
 };
 
 exports.category = "Blocklist";
+exports.syntax = "addblocklist [word]";
+exports.specialSlash = [{
+    name: 'Word',
+    description: 'Description',
+    type: 3,
+    required: true
+  }];
