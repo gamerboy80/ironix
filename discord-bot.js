@@ -240,7 +240,7 @@ client.toxicLimit = new enmap({ name: "toxicLimit" });
 client.notAnalyze = new enmap({ name: "notAnalyze" });
 client.usersOnCountdown = new enmap({ name: "usersOnCountdown" });
 client.aliases = new enmap({ name: "aliases" });
-client.optedIn = new enmap({ name: "optedIn" });
+client.optedOut = new enmap({ name: "optedOut" });
 client.challenges = new enmap({ name: "challenges" });
 client.tADisabled = [
   "blocklist",
@@ -380,7 +380,7 @@ client.playSong = function(video, message) {
   };
 
   client.bugCheck = function(message, error) {
-if(client.optedIn.get(message.author.id) == true) {
+if(client.optedOut.get(message.author.id) != true) {
         let bugReport = {};
         bugReport.command = message.content;
         bugReport.error = error.stack.toString();
@@ -412,7 +412,7 @@ if(client.optedIn.get(message.author.id) == true) {
   }
 };
 
-client.version = "2.0";
+client.version = "2.0.1";
 
 fs.readdir("./events/", (err, files) => {
   if (err) return console.error(err);
