@@ -1,11 +1,5 @@
 exports.run = (client, message, args, interaction) => {
-if(interaction) {
-client.api.interactions(interaction.id, interaction.token).callback.post({
-            data: {
-                type: 5
-            },
-        });
-}
+
   var prefix = client.prefixes.get(message.guild.id);
   if (typeof client.aliases.get(message.author.id) !== 'object') {
     client.aliases.set(message.author.id, {});
@@ -59,6 +53,16 @@ client.api.interactions(interaction.id, interaction.token).callback.post({
         }
       });
     }
+if(interaction) {
+client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 4,
+                data: {
+                  embeds: [ response ]
+                }
+            },
+        });
+}
 };
 
 exports.category = "Utility";

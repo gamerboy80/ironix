@@ -229,6 +229,21 @@ var needed = (Math.round(Math.pow(rankData.level, 2) / 10) + 2) * 10;
   // If that command doesn't exist, silently exit and do nothing
   if (!cmd) return;
 
+  if(!client.ableUsers.get(message.author.id) && message.content != prefix + "agree") { 
+    message.channel.send({
+        embed: {
+          color: 0x51c878,
+          description:
+            "For using Ironix, you need to agree to our [Privacy Policy](https://ironix.emeraldteam.ga/privacy). Send " + prefix + "agree to agree to it and start using Ironix.",
+          footer: {
+            text: `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
+            icon_url: message.author.displayAvatarURL()
+          }
+        }
+      });
+    return;
+  }
+
   // Run the command
   if(!Array.from(client.usersOnCountdown.keys()).includes(message.author.id)) {
 client.usersOnCountdown.set(message.author.id);

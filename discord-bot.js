@@ -241,6 +241,7 @@ client.notAnalyze = new enmap({ name: "notAnalyze" });
 client.usersOnCountdown = new enmap({ name: "usersOnCountdown" });
 client.aliases = new enmap({ name: "aliases" });
 client.optedOut = new enmap({ name: "optedOut" });
+client.ableUsers = new enmap({ name: "ableUsers" });
 client.challenges = new enmap({ name: "challenges" });
 client.tADisabled = [
   "blocklist",
@@ -412,7 +413,7 @@ if(client.optedOut.get(message.author.id) != true) {
   }
 };
 
-client.version = "2.0.1";
+client.version = "NIGHTLY";
 
 fs.readdir("./events/", (err, files) => {
   if (err) return console.error(err);

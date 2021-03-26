@@ -1,11 +1,5 @@
 exports.run = (client, message, args, interaction) => {
-if(interaction) {
-client.api.interactions(interaction.id, interaction.token).callback.post({
-            data: {
-                type: 5
-            },
-        });
-}
+
   if (message.member.hasPermission("MANAGE_GUILD")) {
     let blockedL = [];
     if(client.xpblocked.get(message.guild.id) != undefined) {
@@ -62,6 +56,16 @@ client.api.interactions(interaction.id, interaction.token).callback.post({
       }
     });
   }
+if(interaction) {
+client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 4,
+                data: {
+                  embeds: [ response ]
+                }
+            },
+        });
+}
 };
 
 exports.category = "Settings";

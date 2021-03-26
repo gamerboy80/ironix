@@ -1,11 +1,5 @@
 exports.run = (client, message, args, interaction) => {
-if(interaction) {
-client.api.interactions(interaction.id, interaction.token).callback.post({
-            data: {
-                type: 5
-            },
-        });
-}
+
   const embed = new (require("discord.js")).MessageEmbed()
     .setTitle("Frequently Asked Questions")
     .addField("Why credits message goes to DMs?", "As we link a memes subreddit which can have NSFW content, we decided to send credits embed to DMs instead of the server as this content may be inappropiate for some users.")
@@ -16,6 +10,16 @@ client.api.interactions(interaction.id, interaction.token).callback.post({
       message.author.displayAvatarURL()
     );
   message.channel.send({ embed });
+if(interaction) {
+client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 4,
+                data: {
+                  embeds: [ response ]
+                }
+            },
+        });
+}
 };
 
 exports.category = "Utility";

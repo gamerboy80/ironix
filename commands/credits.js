@@ -1,11 +1,5 @@
 exports.run = (client, message, args, interaction) => {
-if(interaction) {
-client.api.interactions(interaction.id, interaction.token).callback.post({
-            data: {
-                type: 5
-            },
-        });
-}
+
   const embed = new (require("discord.js")).MessageEmbed()
     .setTitle("This bot couldn't be possible without the help of")
     .addField("Our library", "https://discord.js.org/")
@@ -41,5 +35,15 @@ client.api.interactions(interaction.id, interaction.token).callback.post({
   message.author.send({ embed }).then(() =>  message.channel.send("I DMed you!")).catch(() => message.channel.send("I tried but failed to DM you!"));
 } catch {}
   
+  if(interaction) {
+client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 4,
+                data: {
+                  embeds: [ response ]
+                }
+            },
+        });
+}
 };
 exports.category = "Info";

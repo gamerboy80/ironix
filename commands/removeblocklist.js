@@ -1,11 +1,5 @@
 exports.run = (client, message, args, interaction) => {
-if(interaction) {
-client.api.interactions(interaction.id, interaction.token).callback.post({
-            data: {
-                type: 5
-            },
-        });
-}
+
   var prefix = client.prefixes.get(message.guild.id);
   if (Array.isArray(client.blocklist.get(message.guild.id)) == false) {
     client.blocklist.set(message.guild.id, []);
@@ -72,6 +66,16 @@ client.api.interactions(interaction.id, interaction.token).callback.post({
       }
     });
   }
+if(interaction) {
+client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 4,
+                data: {
+                  embeds: [ response ]
+                }
+            },
+        });
+}
 };
 
 exports.category = "Blocklist";

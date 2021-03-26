@@ -1,11 +1,5 @@
 exports.run = (client, message, args, interaction) => {
-if(interaction) {
-client.api.interactions(interaction.id, interaction.token).callback.post({
-            data: {
-                type: 5
-            },
-        });
-}
+
 	var prefix = client.prefixes.get(message.guild.id);
 
 	if (!message.member.hasPermission("MANAGE_GUILD")) {
@@ -91,6 +85,16 @@ client.api.interactions(interaction.id, interaction.token).callback.post({
 } else {
   return s;
 }
+}
+if(interaction) {
+client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 4,
+                data: {
+                  embeds: [ response ]
+                }
+            },
+        });
 }
 };
 exports.category = "Settings";

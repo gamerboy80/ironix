@@ -4,13 +4,7 @@ const ojsama = require("ojsama");
 const fs = require("fs");
 const { uniqBy } = require("lodash");
 exports.run = (client, message, args, interaction) => {
-if(interaction) {
-client.api.interactions(interaction.id, interaction.token).callback.post({
-            data: {
-                type: 5
-            },
-        });
-}
+
   var prefix = client.prefixes.get(message.guild.id);
 	if (args[0]) {
 			axios
@@ -46,6 +40,16 @@ client.api.interactions(interaction.id, interaction.token).callback.post({
           },
         },
       });
+  if(interaction) {
+client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 4,
+                data: {
+                  embeds: [ response ]
+                }
+            },
+        });
+}
 };
 
 exports.owner = true;

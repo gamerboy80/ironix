@@ -1,11 +1,5 @@
   exports.run = (client, message, args, interaction) => {
-if(interaction) {
-client.api.interactions(interaction.id, interaction.token).callback.post({
-            data: {
-                type: 5
-            },
-        });
-}
+
   const embed = new (require("discord.js")).MessageEmbed()
     .setTitle("Bot Info")
     .addField("Version", client.version)
@@ -17,6 +11,16 @@ client.api.interactions(interaction.id, interaction.token).callback.post({
       message.author.displayAvatarURL()
     );
   message.channel.send({ embed });
+if(interaction) {
+client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 4,
+                data: {
+                  embeds: [ response ]
+                }
+            },
+        });
+}
 };
 
 exports.category = "Info";

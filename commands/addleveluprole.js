@@ -1,11 +1,5 @@
 exports.run = (client, message, args, interaction) => {
-if(interaction) {
-client.api.interactions(interaction.id, interaction.token).callback.post({
-            data: {
-                type: 5
-            },
-        });
-}
+
   if (message.member.hasPermission("MANAGE_GUILD")) {
     var prefix = client.prefixes.get(message.guild.id);
     if (!isNaN(args[0]) && message.guild.roles.cache.get(args[1]) != undefined) {
@@ -51,6 +45,16 @@ client.api.interactions(interaction.id, interaction.token).callback.post({
       },
     });
   }
+if(interaction) {
+client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 4,
+                data: {
+                  embeds: [ response ]
+                }
+            },
+        });
+}
 };
 
 exports.category = "Settings";

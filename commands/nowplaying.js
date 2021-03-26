@@ -1,11 +1,5 @@
 exports.run = (client, message, args, interaction) => {
-if(interaction) {
-client.api.interactions(interaction.id, interaction.token).callback.post({
-            data: {
-                type: 5
-            },
-        });
-}
+
   if(!client.disabledFunctions.get(message.guild.id).includes("music")) {
   if(client.queue[message.guild.id]) {
   	message.channel.send({
@@ -63,6 +57,16 @@ function formatFromMs(ms) {
 return fix(minutes, false) + ':' + fix(seconds, true);
 }
 }
+}
+if(interaction) {
+client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 4,
+                data: {
+                  embeds: [ response ]
+                }
+            },
+        });
 }
 };
 

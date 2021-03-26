@@ -1,11 +1,5 @@
 exports.run = (client, message, args, interaction) => {
-if(interaction) {
-client.api.interactions(interaction.id, interaction.token).callback.post({
-            data: {
-                type: 5
-            },
-        });
-}
+
 	if(client.optedOut.get(message.author.id) != true) {
 		client.optedOut.set(message.author.id, true)
  message.channel.send({
@@ -29,6 +23,16 @@ client.api.interactions(interaction.id, interaction.token).callback.post({
                 },
               },
             });
+}
+if(interaction) {
+client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 4,
+                data: {
+                  embeds: [ response ]
+                }
+            },
+        });
 }
 };
 

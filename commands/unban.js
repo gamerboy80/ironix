@@ -1,11 +1,5 @@
 exports.run = (client, message, args, interaction) => {
-if(interaction) {
-client.api.interactions(interaction.id, interaction.token).callback.post({
-            data: {
-                type: 5
-            },
-        });
-}
+
   if(!client.disabledFunctions.get(message.guild.id).includes("moderation")) {
     if(!client.disabledFunctions.get(message.guild.id).includes("ban")) {
   var prefix = client.prefixes.get(message.guild.id);
@@ -78,6 +72,16 @@ var thing = client.tempBans.get(message.guild.id) || {}; // probably copy this M
   }
   unban();
 }
+}
+if(interaction) {
+client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 4,
+                data: {
+                  embeds: [ response ]
+                }
+            },
+        });
 }
 };
 

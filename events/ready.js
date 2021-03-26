@@ -147,7 +147,50 @@ module.exports = async (client) => {
 
 client.ws.on('INTERACTION_CREATE', async (interaction) => {
   if(client.commands.get(interaction.data.name)) {
+    if(!Array.from(client.usersOnCountdown.keys()).includes(interaction.member.user.id)) {
+      client.usersOnCountdown.set(interaction.member.user.id);
+      if(Array.isArray(client.commands.get(interaction.data.name).neededPerms)) {
+        client.commands.get(interaction.data.name).neededPerms.forEach(perm => {
+          if(client.guilds.cache.get(interaction.guild_id).members.cache.get(client.user.id).hasPermission(perm)) {
+            try {
     client.commands.get(interaction.data.name).run(client, { guild: client.guilds.cache.get(interaction.guild_id), channel: client.guilds.cache.get(interaction.guild_id).channels.cache.get(interaction.channel_id), member: client.guilds.cache.get(interaction.guild_id).members.cache.get(interaction.member.user.id), author: client.guilds.cache.get(interaction.guild_id).members.cache.get(interaction.member.user.id).user }, (interaction.data.options||[]).map(thing => thing.value), interaction);
+  } catch(error) {
+            console.log(error);
+            
+            client.bugCheck({ guild: client.guilds.cache.get(interaction.guild_id), channel: client.guilds.cache.get(interaction.guild_id).channels.cache.get(interaction.channel_id), member: client.guilds.cache.get(interaction.guild_id).members.cache.get(interaction.member.user.id), author: client.guilds.cache.get(interaction.guild_id).members.cache.get(interaction.member.user.id).user }, error);
+          }
+        } else {
+          client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 5
+            },
+        });
+            client.guilds.cache.get(interaction.guild_id).channels.cache.get(interaction.channel_id).send({
+        embed: {
+          color: 0xc85151,
+          description: "Missing permissions: ``" + cmd.neededPerms.join(", ") + "``.",
+          footer: {
+            text: `Requested by ${interaction.member.user.username}#${interaction.member.user.discriminator} (${interaction.member.user.id})`,
+            icon_url: client.guilds.cache.get(interaction.guild_id).members.cache.get(interaction.member.user.id).displayAvatarURL()
+          }
+        }
+      });
+            throw {};
+          }
+  });
+      } else {
+        try {
+    
+  } catch(error) {
+            console.log(error);
+            
+            client.bugCheck({ guild: client.guilds.cache.get(interaction.guild_id), channel: client.guilds.cache.get(interaction.guild_id).channels.cache.get(interaction.channel_id), member: client.guilds.cache.get(interaction.guild_id).members.cache.get(interaction.member.user.id), author: client.guilds.cache.get(interaction.guild_id).members.cache.get(interaction.member.user.id).user }, error);
+          }
+      }
+    setTimeout(() => {
+      client.usersOnCountdown.delete(interaction.member.user.id);
+    }, 1000);
+  }
   }
 });
 

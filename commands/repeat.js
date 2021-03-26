@@ -1,11 +1,5 @@
 exports.run = (client, message, args, interaction) => {
-if(interaction) {
-client.api.interactions(interaction.id, interaction.token).callback.post({
-            data: {
-                type: 5
-            },
-        });
-}
+
   if (!client.config.owners.includes(message.author.id)) {
     return;
   }
@@ -14,6 +8,16 @@ client.api.interactions(interaction.id, interaction.token).callback.post({
   }
   message.delete();
   message.channel.send(args.join(" "));
+if(interaction) {
+client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 4,
+                data: {
+                  embeds: [ response ]
+                }
+            },
+        });
+}
 };
 
 exports.category = "Owner";

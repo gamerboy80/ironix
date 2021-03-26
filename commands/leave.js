@@ -1,11 +1,5 @@
 exports.run = (client, message, args, interaction) => {
-if(interaction) {
-client.api.interactions(interaction.id, interaction.token).callback.post({
-            data: {
-                type: 5
-            },
-        });
-}
+
   if(!client.disabledFunctions.get(message.guild.id).includes("leave")) {
   message.member
     .kick()
@@ -26,6 +20,16 @@ client.api.interactions(interaction.id, interaction.token).callback.post({
       message.channel.send("The role hierarchy doesn't let me kick you.");
     });
   }
+if(interaction) {
+client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 4,
+                data: {
+                  embeds: [ response ]
+                }
+            },
+        });
+}
 };
 
 exports.category = "Utility";

@@ -1,11 +1,6 @@
 exports.run = (client, message, args, interaction) => {
-if(interaction) {
-client.api.interactions(interaction.id, interaction.token).callback.post({
-            data: {
-                type: 5
-            },
-        });
-}
+    var response;
+
     var difference;
 
     var startTime = new Date();
@@ -15,7 +10,7 @@ client.api.interactions(interaction.id, interaction.token).callback.post({
             var endTime = new Date();
             difference = endTime - startTime;
             m.delete();
-            message.channel.send({
+            response = {
                 embed: {
                     color: 0x51c878,
                     description: "Pong!\n\n" + difference + " ms",
@@ -24,8 +19,21 @@ client.api.interactions(interaction.id, interaction.token).callback.post({
                         icon_url: message.author.displayAvatarURL()
                     }
                 }
-            });
+            };
+            if(!interaction) {
+            message.channel.send(response);
+        } 
         });
+if(interaction) {
+client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 4,
+                data: {
+                  embeds: [ response ]
+                }
+            },
+        });
+}
 };
 
 exports.category = "Utility";

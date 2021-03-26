@@ -1,11 +1,5 @@
 exports.run = (client, message, args, interaction) => {
-if(interaction) {
-client.api.interactions(interaction.id, interaction.token).callback.post({
-            data: {
-                type: 5
-            },
-        });
-}
+
   if(!client.disabledFunctions.get(message.guild.id).includes("fun")) {
   if(!client.disabledFunctions.get(message.guild.id).includes("animals")) {
     if(!client.disabledFunctions.get(message.guild.id).includes("bird")) {
@@ -28,6 +22,16 @@ client.api.interactions(interaction.id, interaction.token).callback.post({
   });
 } 
   }
+}
+if(interaction) {
+client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 4,
+                data: {
+                  embeds: [ response ]
+                }
+            },
+        });
 }
 };
 

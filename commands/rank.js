@@ -1,11 +1,5 @@
 exports.run = async (client, message, args, interaction) => {
-if(interaction) {
-client.api.interactions(interaction.id, interaction.token).callback.post({
-            data: {
-                type: 5
-            },
-        });
-}
+
   if (!client.disabledFunctions.get(message.guild.id).includes("rank")) {
       function getIdFromMention(mention) {
         if (!mention) {
@@ -328,6 +322,16 @@ client.api.interactions(interaction.id, interaction.token).callback.post({
       }
       }
   }
+if(interaction) {
+client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 4,
+                data: {
+                  embeds: [ response ]
+                }
+            },
+        });
+}
 };
 
 exports.category = "Rank";

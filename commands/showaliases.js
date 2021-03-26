@@ -1,11 +1,5 @@
 exports.run = (client, message, args, interaction) => {
-if(interaction) {
-client.api.interactions(interaction.id, interaction.token).callback.post({
-            data: {
-                type: 5
-            },
-        });
-}
+
     if (Object.keys(client.aliases.get(message.author.id)).length != 0) {
       message.channel.send({
         embed: {
@@ -32,6 +26,16 @@ client.api.interactions(interaction.id, interaction.token).callback.post({
         }
       });
     }
+if(interaction) {
+client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 4,
+                data: {
+                  embeds: [ response ]
+                }
+            },
+        });
+}
 };
 
 exports.category = "Utility";
