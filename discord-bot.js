@@ -1,22 +1,25 @@
 const discord = require("discord.js");
-const client = new discord.Client({ fetchAllMembers: true, ws: { properties: { $browser: "Discord iOS" } } });
-const enmap = require("enmap"); 
+const client = new discord.Client({
+	fetchAllMembers: true,
+	ws: { properties: { $browser: "Discord iOS" } },
+});
+const enmap = require("enmap");
 client.config = require("./config.json");
 client.config.categories = [
-    "Owner",
-    "Privacy",
-    "Settings",
-    "Blocklist",
-    "Moderation",
-    "Suggestions",
-    "Challenges",
-    "Utility",
-    "Rank",
-    "Fun",
-    "Music",
-    "Info",
-    "Disabled"
-  ];
+	"Owner",
+	"Privacy",
+	"Settings",
+	"Blocklist",
+	"Moderation",
+	"Suggestions",
+	"Challenges",
+	"Utility",
+	"Rank",
+	"Fun",
+	"Music",
+	"Info",
+	"Disabled",
+];
 const needle = require("needle");
 const fs = require("fs");
 var clone = require("lodash.clonedeep");
@@ -25,8 +28,8 @@ var clone = require("lodash.clonedeep");
 
 // require stuff
 const express = require("express"),
-  app = express(),
-  server = require("http").Server(app);
+	app = express(),
+	server = require("http").Server(app);
 
 // start server listening
 server.listen(3000);
@@ -36,13 +39,15 @@ server.listen(3000);
 app.use(express.static(__dirname + "/public/"));
 
 function getHtmlStart(webTitle) {
-  return (
-    `<!DOCTYPE html>
+	return (
+		`<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>`+ webTitle + `</title>
+    <title>` +
+		webTitle +
+		`</title>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/all.css">
     <meta property="og:image" content="/og.png">
@@ -62,7 +67,7 @@ function getHtmlStart(webTitle) {
             <div class="horizontalSeparator"></div>
         </nav>
     `
-  );
+	);
 }
 var htmlEnd = `</div>
     <script src="/js/script.js"></script>
@@ -70,152 +75,156 @@ var htmlEnd = `</div>
 </html>`;
 
 app.get("/leaderboard*", (req, res) => {
-  function kFormatter(num) {
-    return Math.abs(num) > 999
-      ? Math.sign(num) * (Math.abs(num) / 1000).toFixed(1) + "k"
-      : Math.sign(num) * Math.abs(num);
-  }
+	function kFormatter(num) {
+		return Math.abs(num) > 999
+			? Math.sign(num) * (Math.abs(num) / 1000).toFixed(1) + "k"
+			: Math.sign(num) * Math.abs(num);
+	}
 
-  var guildId = req.url.toString().slice(13);
+	var guildId = req.url.toString().slice(13);
 
-  var htmlStart = getHtmlStart(
-    "Ironix | " +
-      (client.guilds.cache.get(guildId).name || `Guild not found`) +
-      ` - Leaderboard`
-  );
+	var htmlStart = getHtmlStart(
+		"Ironix | " +
+			(client.guilds.cache.get(guildId).name || `Guild not found`) +
+			` - Leaderboard`
+	);
 
-  if (client.rankData.get(guildId) != undefined) {
-    var memberArray = [];
-    var memberLevels = [];
-    memberArray = Object.keys(client.rankData.get(guildId));
-    memberLevels = memberArray.map(function(e) {
-      return client.rankData.get(guildId, e).level;
-    });
-    memberLevelsToRankCheck = memberArray.map(function(e) {
-      return (
-        client.rankData.get(guildId, e).level.toString() +
-        ".1" +
-        client.rankData.get(guildId, e).xp.toString() +
-        "1"
-      );
-    });
-    var sortedArray = memberLevelsToRankCheck
-      .filter((v, i, a) => a.indexOf(v) === i)
-      .sort((a, b) => b - a);
-    var memberRanks = memberLevelsToRankCheck.map(
-      (v) => sortedArray.findIndex((e) => e == v) + 1
-    );
+	if (client.rankData.get(guildId) != undefined) {
+		var memberArray = [];
+		var memberLevels = [];
+		memberArray = Object.keys(client.rankData.get(guildId));
+		memberLevels = memberArray.map(function (e) {
+			return client.rankData.get(guildId, e).level;
+		});
+		memberLevelsToRankCheck = memberArray.map(function (e) {
+			return (
+				client.rankData.get(guildId, e).level.toString() +
+				".1" +
+				client.rankData.get(guildId, e).xp.toString() +
+				"1"
+			);
+		});
+		var sortedArray = memberLevelsToRankCheck
+			.filter((v, i, a) => a.indexOf(v) === i)
+			.sort((a, b) => b - a);
+		var memberRanks = memberLevelsToRankCheck.map(
+			(v) => sortedArray.findIndex((e) => e == v) + 1
+		);
 
-    var membersXp = memberArray.map(function(e) {
-      return kFormatter(client.rankData.get(guildId, e).xp);
-    });
+		var membersXp = memberArray.map(function (e) {
+			return kFormatter(client.rankData.get(guildId, e).xp);
+		});
 
-    var membersNeededXp = memberArray.map(function(e) {
-      return kFormatter((client.rankData.get(guildId, e).level + 1) * 100);
-    });
+		var membersNeededXp = memberArray.map(function (e) {
+			return kFormatter((client.rankData.get(guildId, e).level + 1) * 100);
+		});
 
-    var membersObjectPrePre = {};
-    memberArray.forEach(
-      (e, i) =>
-        (membersObjectPrePre[e] = {
-          username:
-            client.users.cache.get(e) != undefined
-              ? client.users.cache.get(e).tag
-              : `Username not found`,
-          rank: memberRanks[i],
-          level: memberLevels[i],
-          xp: membersXp[i],
-          neededXp: membersNeededXp[i],
-        })
-    );
+		var membersObjectPrePre = {};
+		memberArray.forEach(
+			(e, i) =>
+				(membersObjectPrePre[e] = {
+					username:
+						client.users.cache.get(e) != undefined
+							? client.users.cache.get(e).tag
+							: `Username not found`,
+					rank: memberRanks[i],
+					level: memberLevels[i],
+					xp: membersXp[i],
+					neededXp: membersNeededXp[i],
+				})
+		);
 
-    var membersObjectPre = Object.entries(membersObjectPrePre);
+		var membersObjectPre = Object.entries(membersObjectPrePre);
 
-    membersObjectPre.sort(function(a, b) {
-      return a[1].rank - b[1].rank;
-    });
+		membersObjectPre.sort(function (a, b) {
+			return a[1].rank - b[1].rank;
+		});
 
-    var membersObject = Object.fromEntries(membersObjectPre);
+		var membersObject = Object.fromEntries(membersObjectPre);
 
-    var leaderboardPage =
-      `<div class="marginedContainer"><h1 class="leaderboardTitle">` +
-      client.guilds.cache.get(guildId).name +
-      ` - Leaderboard</h1>`;
+		var leaderboardPage =
+			`<div class="marginedContainer"><h1 class="leaderboardTitle">` +
+			client.guilds.cache.get(guildId).name +
+			` - Leaderboard</h1>`;
 
-    Object.keys(membersObject).forEach((e, i) => {
-      const user = membersObject[e];
-      const userId = Object.keys(membersObject)[i];
-      const avatarUrl =
-        client.users.cache.get(userId) != undefined
-          ? client.users.cache.get(userId).displayAvatarURL()
-          : "https://cdn.discordapp.com/embed/avatars/1.png";
-      leaderboardPage =
-        leaderboardPage +
-        `<h3 class="leaderboardItem"><img class="avatar" src="` +
-        avatarUrl +
-        `"><p class="usernameLeaderboard">` +
-        user.username +
-        `</p>: RANK: #` +
-        user.rank +
-        ` | LEVEL: ` +
-        user.level +
-        ` | XP: ` +
-        user.xp +
-        `/` +
-        user.neededXp +
-        `</h3>`;
-    });
-    res.send(htmlStart + leaderboardPage + "</div>" + htmlEnd);
-  } else {
-    var htmlStart = getHtmlStart("Ironix | Error");
-    res.status(404).send(
-      htmlStart +
-        `<p class="bigTitle">Error 404 - Guild not found</p>` +
-        htmlEnd
-    );
-  }
+		Object.keys(membersObject).forEach((e, i) => {
+			const user = membersObject[e];
+			const userId = Object.keys(membersObject)[i];
+			const avatarUrl =
+				client.users.cache.get(userId) != undefined
+					? client.users.cache.get(userId).displayAvatarURL()
+					: "https://cdn.discordapp.com/embed/avatars/1.png";
+			leaderboardPage =
+				leaderboardPage +
+				`<h3 class="leaderboardItem"><img class="avatar" src="` +
+				avatarUrl +
+				`"><p class="usernameLeaderboard">` +
+				user.username +
+				`</p>: RANK: #` +
+				user.rank +
+				` | LEVEL: ` +
+				user.level +
+				` | XP: ` +
+				user.xp +
+				`/` +
+				user.neededXp +
+				`</h3>`;
+		});
+		res.send(htmlStart + leaderboardPage + "</div>" + htmlEnd);
+	} else {
+		var htmlStart = getHtmlStart("Ironix | Error");
+		res
+			.status(404)
+			.send(
+				htmlStart +
+					`<p class="bigTitle">Error 404 - Guild not found</p>` +
+					htmlEnd
+			);
+	}
 });
 
 app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/public/index.html");
+	res.sendFile(__dirname + "/public/index.html");
 });
 
 app.get("/features*", (req, res) => {
-  res.sendFile(__dirname + "/public/features.html");
+	res.sendFile(__dirname + "/public/features.html");
 });
 app.get("/privacy*", (req, res) => {
-  res.sendFile(__dirname + "/public/privacy.html");
+	res.sendFile(__dirname + "/public/privacy.html");
 });
 
 app.get("/invite*", (req, res) => {
-  res.redirect(
-    "https://discord.com/api/oauth2/authorize?client_id=" + client.user.id + "&permissions=8&scope=bot%20applications.commands"
-  );
+	res.redirect(
+		"https://discord.com/api/oauth2/authorize?client_id=" +
+			client.user.id +
+			"&permissions=8&scope=bot%20applications.commands"
+	);
 });
 
 app.get("/ultra-secret-easter-egg-surprised-ironix-face*", (req, res) => {
-  res.sendFile(__dirname + "/public/game.html");
+	res.sendFile(__dirname + "/public/game.html");
 });
 app.get("/get-commands-list*", (req, res) => {
-  const commandsList = [];
-  fs.readdir("./commands/", (err, files) => {
-    if (err) return console.error(err);
-    files.forEach((file) => {
-      if (!file.endsWith(".js")) return;
-      let commandName = file.split(".")[0];
-      commandsList.push(commandName);
-    });
-    res.send(commandsList.toString());
-  });
+	const commandsList = [];
+	fs.readdir("./commands/", (err, files) => {
+		if (err) return console.error(err);
+		files.forEach((file) => {
+			if (!file.endsWith(".js")) return;
+			let commandName = file.split(".")[0];
+			commandsList.push(commandName);
+		});
+		res.send(commandsList.toString());
+	});
 });
 
 app.get("*", (req, res) => {
-  res.status(404).sendFile(__dirname + "/public/404.html");
+	res.status(404).sendFile(__dirname + "/public/404.html");
 });
 
 app.use((error, req, res, next) => {
-  console.log(error);
-  res.status(500).sendFile(__dirname + "/public/500.html");
+	console.log(error);
+	res.status(500).sendFile(__dirname + "/public/500.html");
 });
 
 // LEADERBOARD END
@@ -244,34 +253,34 @@ client.optedOut = new enmap({ name: "optedOut" });
 client.ableUsers = new enmap({ name: "ableUsers" });
 client.challenges = new enmap({ name: "challenges" });
 client.tADisabled = [
-  "blocklist",
-  "kick",
-  "ban",
-  "mute",
-  "purge",
-  "covid",
-  "leave",
-  "rank",
-  "memberscount",
-  "poll",
-  "suggest",
-  "animals",
-  "rps",
-  "minesweeper",
-  "meme",
-  "bingimage",
-  "mailfilter",
-  "fun",
-  "bird",
-  "cat",
-  "dog",
-  "fox",
-  "moderation",
-  "filters",
-  "warn",
-  "messeveryone",
-  "music",
-  "toxicity"
+	"blocklist",
+	"kick",
+	"ban",
+	"mute",
+	"purge",
+	"covid",
+	"leave",
+	"rank",
+	"memberscount",
+	"poll",
+	"suggest",
+	"animals",
+	"rps",
+	"minesweeper",
+	"meme",
+	"bingimage",
+	"mailfilter",
+	"fun",
+	"bird",
+	"cat",
+	"dog",
+	"fox",
+	"moderation",
+	"filters",
+	"warn",
+	"messeveryone",
+	"music",
+	"toxicity",
 ];
 client.xpblocked = new enmap({ name: "xpblocked" });
 client.rankcolour = new enmap({ name: "rankcolour" });
@@ -283,10 +292,10 @@ client.purge = ["purge"];
 client.covid = ["covid"];
 client.leave = ["leave"];
 client.rank = [
-  "rank",
-  "addleveluprole",
-  "removeleveluprole",
-  "showleveluproles",
+	"rank",
+	"addleveluprole",
+	"removeleveluprole",
+	"showleveluproles",
 ];
 client.memberscount = ["memberscount"];
 client.poll = ["poll"];
@@ -297,16 +306,16 @@ client.minesweeper = ["minesweeper"];
 client.meme = ["meme"];
 client.bingimage = ["bingimage"];
 client.fun = [
-  "bingimage",
-  "bird",
-  "cat",
-  "dog",
-  "fox",
-  "meme",
-  "minesweeper",
-  "rps",
-  "pig",
-  "messeveryone"
+	"bingimage",
+	"bird",
+	"cat",
+	"dog",
+	"fox",
+	"meme",
+	"minesweeper",
+	"rps",
+	"pig",
+	"messeveryone",
 ];
 client.bird = ["bird"];
 client.cat = ["cat"];
@@ -315,193 +324,192 @@ client.fox = ["fox"];
 client.warn = ["warn"];
 client.pig = ["pig"];
 client.moderation = [
-  "kick",
-  "permban",
-  "permmute",
-  "purge",
-  "tempban",
-  "tempmute",
-  "unban",
-  "unmute",
-  "warn",
-  "warns",
+	"kick",
+	"permban",
+	"permmute",
+	"purge",
+	"tempban",
+	"tempmute",
+	"unban",
+	"unmute",
+	"warn",
+	"warns",
 ];
 client.toxicity = ["toxicity"];
 client.messeveryone = ["messeveryone"];
-client.music = [
-  "play",
-  "stop",
-  "skip",
-  "queue",
-  "nowplaying",
-  "volume"
-];
+client.music = ["play", "stop", "skip", "queue", "nowplaying", "volume"];
 
 client.queue = {};
 client.dispatcher = {};
-client.playSong = function(video, message) {
-    if(video.vc) {
-    message.channel.send({
-          embed: {
-            color: 0x51c878,
-            title: "🔈 " + video.title,
-            url: video.url,
-            description: "By " + video.author + " - Duration: " + video.duration,
-            image: {
-              url: video.thumbnail
-            },
-            footer: {
-              text: `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
-              icon_url: message.author.displayAvatarURL()
-            }
-          }
-        });
+client.playSong = function (video, message) {
+	if (video.vc) {
+		message.channel.send({
+			embed: {
+				color: 0x51c878,
+				title: "🔈 " + video.title,
+				url: video.url,
+				description: "By " + video.author + " - Duration: " + video.duration,
+				image: {
+					url: video.thumbnail,
+				},
+				footer: {
+					text: `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
+					icon_url: message.author.displayAvatarURL(),
+				},
+			},
+		});
 
-      client.dispatcher[message.guild.id] = video.vc.play(video.playableUrl, { highWaterMark: 1<<25, type: 'opus' }).on("finish", finish => {
-        client.queue[message.guild.id].shift();
-        if(client.queue[message.guild.id].length > 0) {
-        client.playSong(client.queue[message.guild.id][0], message);
-      } else {
-        message.guild.members.cache.get(client.user.id).voice.channel.leave();
-      }
-      });
-    } else {
-      client.queue[message.guild.id] = [];
-      message.channel.send({
-          embed: {
-            color: 0xc85151,
-            description: "Something went terribly wrong, please try again later.",
-            footer: {
-              text: `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
-              icon_url: message.author.displayAvatarURL()
-            }
-          }
-        });
-    }
-  };
+		client.dispatcher[message.guild.id] = video.vc
+			.play(video.playableUrl, { highWaterMark: 1 << 25, type: "opus" })
+			.on("finish", (finish) => {
+				client.queue[message.guild.id].shift();
+				if (client.queue[message.guild.id].length > 0) {
+					client.playSong(client.queue[message.guild.id][0], message);
+				} else {
+					message.guild.members.cache.get(client.user.id).voice.channel.leave();
+				}
+			});
+	} else {
+		client.queue[message.guild.id] = [];
+		message.channel.send({
+			embed: {
+				color: 0xc85151,
+				description: "Something went terribly wrong, please try again later.",
+				footer: {
+					text: `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
+					icon_url: message.author.displayAvatarURL(),
+				},
+			},
+		});
+	}
+};
 
-  client.bugCheck = function(message, error) {
-if(client.optedOut.get(message.author.id) != true) {
-        let bugReport = {};
-        bugReport.command = message.content;
-        bugReport.error = error.stack.toString();
-        bugReport.guild = message.guild;
-        bugReport.channel = message.channel;
-        bugReport.user = message.author;
-        require("fs").writeFileSync("./bugreports/" + Date.now() + ".json", JSON.stringify(bugReport, null, 1).replace(/(?:\r\n|\r|\n)/g, "\n"))
-              message.channel.send({
-          embed: {
-            color: 0xc85151,
-            description: 'Something went terribly wrong, please try again later. As you opted-in our optional "bug reports" data collection, our team got informed. Thank you!',
-            footer: {
-              text: `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
-              icon_url: message.author.displayAvatarURL()
-            }
-          }
-        });
-            } else {
-            message.channel.send({
-          embed: {
-            color: 0xc85151,
-            description: "Something went terribly wrong, please try again later.",
-            footer: {
-              text: `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
-              icon_url: message.author.displayAvatarURL()
-            }
-          }
-        });
-  }
+client.bugCheck = function (message, error) {
+	if (client.optedOut.get(message.author.id) != true) {
+		let bugReport = {};
+		bugReport.command = message.content;
+		bugReport.error = error.stack.toString();
+		bugReport.guild = message.guild;
+		bugReport.channel = message.channel;
+		bugReport.user = message.author;
+		require("fs").writeFileSync(
+			"./bugreports/" + Date.now() + ".json",
+			JSON.stringify(bugReport, null, 1).replace(/(?:\r\n|\r|\n)/g, "\n")
+		);
+		message.channel.send({
+			embed: {
+				color: 0xc85151,
+				description:
+					'Something went terribly wrong, please try again later. As you opted-in our optional "bug reports" data collection, our team got informed. Thank you!',
+				footer: {
+					text: `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
+					icon_url: message.author.displayAvatarURL(),
+				},
+			},
+		});
+	} else {
+		message.channel.send({
+			embed: {
+				color: 0xc85151,
+				description: "Something went terribly wrong, please try again later.",
+				footer: {
+					text: `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
+					icon_url: message.author.displayAvatarURL(),
+				},
+			},
+		});
+	}
 };
 
 client.version = "NIGHTLY";
 
 fs.readdir("./events/", (err, files) => {
-  if (err) return console.error(err);
-  files.forEach((file) => {
-    const event = require(`./events/${file}`);
-    let eventName = file.split(".")[0];
-    client.on(eventName, event.bind(null, client));
-  });
+	if (err) return console.error(err);
+	files.forEach((file) => {
+		const event = require(`./events/${file}`);
+		let eventName = file.split(".")[0];
+		client.on(eventName, event.bind(null, client));
+	});
 });
 
 client.commands = new enmap();
 client.filters = new enmap();
 
 fs.readdir("./commands/", (err, files) => {
-  if (err) return console.error(err);
-  files.forEach((file) => {
-    if (!file.endsWith(".js")) return;
-    let props = require(`./commands/${file}`);
-    let commandName = file.split(".")[0];
-    console.log(`Attempting to load command ${commandName}`);
-    client.commands.set(commandName.toLowerCase(), props);
-  });
+	if (err) return console.error(err);
+	files.forEach((file) => {
+		if (!file.endsWith(".js")) return;
+		let props = require(`./commands/${file}`);
+		let commandName = file.split(".")[0];
+		console.log(`Attempting to load command ${commandName}`);
+		client.commands.set(commandName.toLowerCase(), props);
+	});
 });
 fs.readdir("./filters/", (err, files) => {
-  if (err) return console.error(err);
-  files.forEach((file) => {
-    if (!file.endsWith(".js")) return;
-    let props = require(`./filters/${file}`);
-    let filterName = file.split(".")[0];
-    console.log(`Attempting to load filter ${filterName}`);
-    client.filters.set(filterName.toLowerCase(), props);
-  });
+	if (err) return console.error(err);
+	files.forEach((file) => {
+		if (!file.endsWith(".js")) return;
+		let props = require(`./filters/${file}`);
+		let filterName = file.split(".")[0];
+		console.log(`Attempting to load filter ${filterName}`);
+		client.filters.set(filterName.toLowerCase(), props);
+	});
 });
 
 client.on("guildCreate", async (guild) => {
-  client.blocklist.set(guild.id, []);
-  client.disabledFunctions.set(guild.id, []);
-  if (guild.roles.cache.find((r) => r.name === "Muted-IX") == null) {
-    guild
-      .roles.create({
-        data: {
-          name: "Muted-IX",
-          color: "GRAY",
-      }
-      })
-      .then((role) => {
-        const muteRole = role;
-        muteRole.setPosition(
-          guild.roles.cache.find((r) => r.name == "Ironix").position - 1
-        );
-        guild.channels.cache.forEach((channel) => {
-          if (channel.manageable) {
-            if (channel.type === "text") {
-              channel.createOverwrite(muteRole, {
-                SEND_MESSAGES: false,
-                ADD_REACTIONS: false,
-              });
-            } else {
-              if (channel.type === "voice") {
-                channel.createOverwrite(muteRole, {
-                  SPEAK: false,
-                });
-              }
-            }
-          }
-        });
-      });
-  }
+	client.blocklist.set(guild.id, []);
+	client.disabledFunctions.set(guild.id, []);
+	if (guild.roles.cache.find((r) => r.name === "Muted-IX") == null) {
+		guild.roles
+			.create({
+				data: {
+					name: "Muted-IX",
+					color: "GRAY",
+				},
+			})
+			.then((role) => {
+				const muteRole = role;
+				muteRole.setPosition(
+					guild.roles.cache.find((r) => r.name == "Ironix").position - 1
+				);
+				guild.channels.cache.forEach((channel) => {
+					if (channel.manageable) {
+						if (channel.type === "text") {
+							channel.createOverwrite(muteRole, {
+								SEND_MESSAGES: false,
+								ADD_REACTIONS: false,
+							});
+						} else {
+							if (channel.type === "voice") {
+								channel.createOverwrite(muteRole, {
+									SPEAK: false,
+								});
+							}
+						}
+					}
+				});
+			});
+	}
 });
 
 client.on("channelCreate", (channel) => {
-  if (channel.guild != null && channel.guild != undefined) {
-    var role = channel.guild.roles.cache.find((r) => r.name === "Muted-IX");
-    if (channel.manageable) {
-      if (channel.type === "text") {
-        channel.createOverwrite(role, {
-          SEND_MESSAGES: false,
-          ADD_REACTIONS: false,
-        });
-      } else {
-        if (channel.type === "voice") {
-          channel.createOverwrite(role, {
-            SPEAK: false,
-          });
-        }
-      }
-    }
-  }
+	if (channel.guild != null && channel.guild != undefined) {
+		var role = channel.guild.roles.cache.find((r) => r.name === "Muted-IX");
+		if (channel.manageable) {
+			if (channel.type === "text") {
+				channel.createOverwrite(role, {
+					SEND_MESSAGES: false,
+					ADD_REACTIONS: false,
+				});
+			} else {
+				if (channel.type === "voice") {
+					channel.createOverwrite(role, {
+						SPEAK: false,
+					});
+				}
+			}
+		}
+	}
 });
 
 // require("./anti-shutdown.js");

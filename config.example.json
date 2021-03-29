@@ -4,8 +4,6 @@
 	"osu": "OSU API KEY",
 	"websiteDomain": "https://website.domain",
 	"prefix": "??",
-	"owners": [
-		"YOUR ID"
-	],
+	"owners": ["YOUR ID"],
 	"debug": "false"
 }

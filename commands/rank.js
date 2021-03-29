@@ -1,344 +1,370 @@
 exports.run = async (client, message, args, interaction) => {
+	if (!client.disabledFunctions.get(message.guild.id).includes("rank")) {
+		function getIdFromMention(mention) {
+			if (!mention) {
+				return;
+			}
 
-  if (!client.disabledFunctions.get(message.guild.id).includes("rank")) {
-      function getIdFromMention(mention) {
-        if (!mention) {
-          return;
-        }
+			if (mention.startsWith("<@") && mention.endsWith(">")) {
+				mention = mention.slice(2, -1);
 
-        if (mention.startsWith("<@") && mention.endsWith(">")) {
-          mention = mention.slice(2, -1);
+				if (mention.startsWith("!")) {
+					mention = mention.slice(1);
+				}
+			}
+			return mention;
+		}
 
-          if (mention.startsWith("!")) {
-            mention = mention.slice(1);
-          }
+		function createUUID() {
+			var dt = new Date().getTime();
+			var uuid = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
+				/[xy]/g,
+				function (c) {
+					var r = (dt + Math.random() * 16) % 16 | 0;
+					dt = Math.floor(dt / 16);
+					return (c == "x" ? r : (r & 0x3) | 0x8).toString(16);
+				}
+			);
+			return uuid;
+		}
 
-          
-        }
-        return mention;
-      }
+		function kFormatter(num) {
+			return Math.abs(num) > 999
+				? Math.sign(num) * (Math.abs(num) / 1000).toFixed(1) + "k"
+				: Math.sign(num) * Math.abs(num);
+		}
 
-      function createUUID() {
-        var dt = new Date().getTime();
-        var uuid = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
-          /[xy]/g,
-          function(c) {
-            var r = (dt + Math.random() * 16) % 16 | 0;
-            dt = Math.floor(dt / 16);
-            return (c == "x" ? r : (r & 0x3) | 0x8).toString(16);
-          }
-        );
-        return uuid;
-      }
+		function roundRect(ctx, x, y, width, height, radius, fill, stroke) {
+			if (typeof stroke === "undefined") {
+				stroke = true;
+			}
+			if (typeof radius === "undefined") {
+				radius = 5;
+			}
+			if (typeof radius === "number") {
+				radius = { tl: radius, tr: radius, br: radius, bl: radius };
+			} else {
+				var defaultRadius = { tl: 0, tr: 0, br: 0, bl: 0 };
+				for (var side in defaultRadius) {
+					radius[side] = radius[side] || defaultRadius[side];
+				}
+			}
+			ctx.beginPath();
+			ctx.moveTo(x + radius.tl, y);
+			ctx.lineTo(x + width - radius.tr, y);
+			ctx.quadraticCurveTo(x + width, y, x + width, y + radius.tr);
+			ctx.lineTo(x + width, y + height - radius.br);
+			ctx.quadraticCurveTo(
+				x + width,
+				y + height,
+				x + width - radius.br,
+				y + height
+			);
+			ctx.lineTo(x + radius.bl, y + height);
+			ctx.quadraticCurveTo(x, y + height, x, y + height - radius.bl);
+			ctx.lineTo(x, y + radius.tl);
+			ctx.quadraticCurveTo(x, y, x + radius.tl, y);
+			ctx.closePath();
+			if (fill) {
+				ctx.fill();
+			}
+			if (stroke) {
+				ctx.stroke();
+			}
+		}
 
-      function kFormatter(num) {
-        return Math.abs(num) > 999
-          ? Math.sign(num) * (Math.abs(num) / 1000).toFixed(1) + "k"
-          : Math.sign(num) * Math.abs(num);
-      }
+		function has(e, k, p) {
+			if (p) {
+				try {
+					return e.has(k, p);
+				} catch {
+					return false;
+				}
+			} else {
+				return e.has(k);
+			}
+		}
 
-      function roundRect(ctx, x, y, width, height, radius, fill, stroke) {
-        if (typeof stroke === "undefined") {
-          stroke = true;
-        }
-        if (typeof radius === "undefined") {
-          radius = 5;
-        }
-        if (typeof radius === "number") {
-          radius = { tl: radius, tr: radius, br: radius, bl: radius };
-        } else {
-          var defaultRadius = { tl: 0, tr: 0, br: 0, bl: 0 };
-          for (var side in defaultRadius) {
-            radius[side] = radius[side] || defaultRadius[side];
-          }
-        }
-        ctx.beginPath();
-        ctx.moveTo(x + radius.tl, y);
-        ctx.lineTo(x + width - radius.tr, y);
-        ctx.quadraticCurveTo(x + width, y, x + width, y + radius.tr);
-        ctx.lineTo(x + width, y + height - radius.br);
-        ctx.quadraticCurveTo(
-          x + width,
-          y + height,
-          x + width - radius.br,
-          y + height
-        );
-        ctx.lineTo(x + radius.bl, y + height);
-        ctx.quadraticCurveTo(x, y + height, x, y + height - radius.bl);
-        ctx.lineTo(x, y + radius.tl);
-        ctx.quadraticCurveTo(x, y, x + radius.tl, y);
-        ctx.closePath();
-        if (fill) {
-          ctx.fill();
-        }
-        if (stroke) {
-          ctx.stroke();
-        }
-      }
+		if (args[0] == undefined) {
+			var rankData = client.rankData.get(message.guild.id, message.author.id);
+			if (!rankData) {
+				message.channel.send(
+					"You aren't ranked yet. Send some messages first, then try again."
+				);
+			} else {
+				var memberArray = [];
+				var memberLevels = [];
+				memberArray = Object.keys(client.rankData.get(message.guild.id));
+				memberLevels = memberArray.map(function (e) {
+					return client.rankData.get(message.guild.id, e).level;
+				});
+				memberLevelsToRankCheck = memberArray.map(function (e) {
+					return (
+						client.rankData.get(message.guild.id, e).level.toString() +
+						".1" +
+						client.rankData.get(message.guild.id, e).xp.toString() +
+						"1"
+					);
+				});
+				var sortedArray = memberLevelsToRankCheck
+					.filter((v, i, a) => a.indexOf(v) === i)
+					.sort((a, b) => b - a);
+				var memberRanks = memberLevelsToRankCheck.map(
+					(v) => sortedArray.findIndex((e) => e == v) + 1
+				);
+				var rank = "#" + memberRanks[memberArray.indexOf(message.author.id)];
 
-      function has(e, k, p) {
-        if (p) {
-          try {
-            return e.has(k, p);
-          } catch {
-            return false;
-          }
-        } else {
-          return e.has(k);
-        }
-      }
+				var level = rankData.level;
+				var xp = kFormatter(rankData.xp);
+				var neededXp = kFormatter((rankData.level + 1) * 100);
+				var slideWidth =
+					(678 * ((rankData.xp * 100) / ((rankData.level + 1) * 100))) / 100;
 
-      if (args[0] == undefined) {
-        var rankData = client.rankData.get(message.guild.id, message.author.id);
-        if (!rankData) {
-          message.channel.send(
-            "You aren't ranked yet. Send some messages first, then try again."
-          );
-        } else {
-          var memberArray = [];
-          var memberLevels = [];
-          memberArray = Object.keys(client.rankData.get(message.guild.id));
-          memberLevels = memberArray.map(function(e) {
-            return client.rankData.get(message.guild.id, e).level;
-          });
-          memberLevelsToRankCheck = memberArray.map(function(e) {
-            return (
-              client.rankData.get(message.guild.id, e).level.toString() +
-        ".1" +
-        client.rankData.get(message.guild.id, e).xp.toString() +
-        "1"
-            );
-          });
-          var sortedArray = memberLevelsToRankCheck
-            .filter((v, i, a) => a.indexOf(v) === i)
-            .sort((a, b) => b - a);
-          var memberRanks = memberLevelsToRankCheck.map(
-            (v) => sortedArray.findIndex((e) => e == v) + 1
-          );
-          var rank = "#" + memberRanks[memberArray.indexOf(message.author.id)];
+				const { registerFont, createCanvas, loadImage } = require("canvas");
 
-          var level = rankData.level;
-          var xp = kFormatter(rankData.xp);
-          var neededXp = kFormatter((rankData.level + 1) * 100);
-          var slideWidth =
-            (678 * ((rankData.xp * 100) / ((rankData.level + 1) * 100))) / 100;
+				registerFont("./assets/Montserrat-Medium.ttf", {
+					family: "Montserrat",
+					weight: "normal",
+				});
+				registerFont("./assets/Montserrat-Bold.ttf", {
+					family: "Montserrat",
+					weight: "bold",
+				});
 
-          const { registerFont, createCanvas, loadImage } = require("canvas");
+				const canvas = createCanvas(934, 382);
+				const ctx = canvas.getContext("2d");
 
-          registerFont("./assets/Montserrat-Medium.ttf", {
-            family: "Montserrat",
-            weight: "normal",
-          });
-          registerFont("./assets/Montserrat-Bold.ttf", {
-            family: "Montserrat",
-            weight: "bold",
-          });
+				const dots = await loadImage("./assets/dots.png");
+				ctx.drawImage(dots, 0, 0);
 
-          const canvas = createCanvas(934, 382);
-          const ctx = canvas.getContext("2d");
+				ctx.fillStyle = client.rankcolour.get(message.author.id) || "#2D9CDB";
+				ctx.fillRect(0, 0, 10, 382);
 
-          const dots = await loadImage("./assets/dots.png");
-          ctx.drawImage(dots, 0, 0);
+				ctx.font = "bold 24px Montserrat";
+				ctx.fillStyle = "white";
+				ctx.textAlign = "right";
+				ctx.fillText("Level " + level + "   Rank " + rank, 934 - 47, 193);
+				ctx.textAlign = "start";
+				ctx.fillStyle = "white";
+				ctx.font = "bold 38px Montserrat";
+				ctx.fillText(message.member.user.username, 51, 215);
+				ctx.font = "normal 38px Montserrat";
+				ctx.fillStyle = "#999999";
+				ctx.fillText(
+					"#" + message.member.user.discriminator,
+					60 + ctx.measureText(message.member.user.username).width,
+					215
+				);
 
-          ctx.fillStyle = client.rankcolour.get(message.author.id) || "#2D9CDB";
-          ctx.fillRect(0, 0, 10, 382);
+				ctx.fillStyle = "#cccccc";
+				ctx.font = "normal 24px Montserrat";
 
-          ctx.font = "bold 24px Montserrat";
-          ctx.fillStyle = "white";
-          ctx.textAlign = "right";
-          ctx.fillText("Level " + level + "   Rank " + rank, 934 - 47, 193);
-          ctx.textAlign = "start";
-          ctx.fillStyle = "white";
-          ctx.font = "bold 38px Montserrat";
-          ctx.fillText(message.member.user.username, 51, 215);
-          ctx.font = "normal 38px Montserrat";
-          ctx.fillStyle = "#999999";
-          ctx.fillText(
-            "#" + message.member.user.discriminator,
-            60 + ctx.measureText(message.member.user.username).width,
-            215
-          );
+				ctx.textAlign = "right";
+				ctx.fillText(xp + `/` + neededXp, 934 - 47, 223);
+				ctx.textAlign = "start";
 
-          ctx.fillStyle = "#cccccc";
-          ctx.font = "normal 24px Montserrat";
+				ctx.fillStyle = "white";
+				roundRect(ctx, 51, 279, 836, 5, 4, true);
 
-          ctx.textAlign = "right";
-          ctx.fillText(xp + `/` + neededXp, 934 - 47, 223);
-          ctx.textAlign = "start";
+				ctx.fillStyle = client.rankcolour.get(message.author.id) || "#2D9CDB";
+				roundRect(ctx, 51, 279, slideWidth, 5, 4, true);
 
-          ctx.fillStyle = "white";
-          roundRect(ctx, 51, 279, 836, 5, 4, true);
+				const canvas2 = createCanvas(80, 80);
+				const ctx2 = canvas2.getContext("2d");
 
-          ctx.fillStyle = client.rankcolour.get(message.author.id) || "#2D9CDB";
-          roundRect(ctx, 51, 279, slideWidth, 5, 4, true);
+				const img = await loadImage(
+					message.author.displayAvatarURL({ format: "png" })
+				);
 
-          const canvas2 = createCanvas(80, 80);
-          const ctx2 = canvas2.getContext("2d");  
+				ctx2.drawImage(img, 0, 0, 80, 80);
 
-          const img = await loadImage(message.author.displayAvatarURL({ format: 'png' }));
+				ctx2.globalCompositeOperation = "destination-in";
+				ctx2.beginPath();
+				ctx2.arc(40, 40, 40, 0, 2 * Math.PI, true);
+				ctx2.fill();
 
-          ctx2.drawImage(img, 0, 0, 80, 80);
+				ctx.drawImage(canvas2, 51, 84);
 
-          ctx2.globalCompositeOperation = "destination-in";
-          ctx2.beginPath();
-          ctx2.arc(40, 40, 40, 0, 2 * Math.PI, true);
-          ctx2.fill();
+				var base64Data = canvas
+					.toDataURL()
+					.replace(/^data:image\/png;base64,/, "");
 
-          ctx.drawImage(canvas2, 51, 84);
+				var rankName = createUUID() + ".png";
 
-          var base64Data = canvas
-            .toDataURL()
-            .replace(/^data:image\/png;base64,/, "");
+				require("fs").writeFile(rankName, base64Data, "base64", function (err) {
+					message.channel
+						.send({ files: [{ attachment: rankName, name: rankName }] })
+						.then(() => {
+							require("fs").unlink(rankName, function (err) {});
+						});
+				});
+			}
+		} else if (true) {
+			var rankData = client.rankData.get(
+				message.guild.id,
+				getIdFromMention(args[0])
+			);
 
-          var rankName = createUUID() + ".png";
+			if (
+				!message.guild.members.cache.get(getIdFromMention(args[0])).user.bot
+			) {
+				if (!rankData) {
+					message.channel.send(
+						"This user isn't ranked yet. Wait for this user to send some messages first, then try again."
+					);
+				} else {
+					var memberArray = [];
+					var memberLevels = [];
+					memberArray = Object.keys(client.rankData.get(message.guild.id));
+					memberLevels = memberArray.map(function (e) {
+						return client.rankData.get(message.guild.id, e).level;
+					});
+					memberLevelsToRankCheck = memberArray.map(function (e) {
+						return (
+							client.rankData.get(message.guild.id, e).level.toString() +
+							".1" +
+							client.rankData.get(message.guild.id, e).xp.toString() +
+							"1"
+						);
+					});
+					var sortedArray = memberLevelsToRankCheck
+						.filter((v, i, a) => a.indexOf(v) === i)
+						.sort((a, b) => b - a);
+					var memberRanks = memberLevelsToRankCheck.map(
+						(v) => sortedArray.findIndex((e) => e == v) + 1
+					);
+					var rank =
+						"#" + memberRanks[memberArray.indexOf(getIdFromMention(args[0]))];
 
-          require("fs").writeFile(rankName, base64Data, "base64", function(
-            err
-          ) {
-            message.channel.send({ files: [{ attachment: rankName, name: rankName }] }).then(() => {
-              require("fs").unlink(rankName, function(err) {});
-            });
-          });
-        }
-      } else if (true) {
-        var rankData = client.rankData.get(message.guild.id, getIdFromMention(args[0]));
+					var level = rankData.level;
+					var xp = kFormatter(rankData.xp);
+					var neededXp = kFormatter((rankData.level + 1) * 100);
+					var slideWidth =
+						(678 * ((rankData.xp * 100) / ((rankData.level + 1) * 100))) / 100;
 
-        if(!message.guild.members.cache.get(getIdFromMention(args[0])).user.bot) {
+					const { registerFont, createCanvas, loadImage } = require("canvas");
 
-        if (!rankData) {
-          message.channel.send(
-            "This user isn't ranked yet. Wait for this user to send some messages first, then try again."
-          );
-        } else {
-        	var memberArray = [];
-          var memberLevels = [];
-          memberArray = Object.keys(client.rankData.get(message.guild.id));
-          memberLevels = memberArray.map(function(e) {
-            return client.rankData.get(message.guild.id, e).level;
-          });
-          memberLevelsToRankCheck = memberArray.map(function(e) {
-            return (
-              client.rankData.get(message.guild.id, e).level.toString() +
-        ".1" +
-        client.rankData.get(message.guild.id, e).xp.toString() +
-        "1"
-            );
-          });
-          var sortedArray = memberLevelsToRankCheck
-            .filter((v, i, a) => a.indexOf(v) === i)
-            .sort((a, b) => b - a);
-          var memberRanks = memberLevelsToRankCheck.map(
-            (v) => sortedArray.findIndex((e) => e == v) + 1
-          );
-          var rank = "#" + memberRanks[memberArray.indexOf(getIdFromMention(args[0]))];
+					registerFont("./assets/Montserrat-Medium.ttf", {
+						family: "Montserrat",
+						weight: "normal",
+					});
+					registerFont("./assets/Montserrat-Bold.ttf", {
+						family: "Montserrat",
+						weight: "bold",
+					});
 
-          var level = rankData.level;
-          var xp = kFormatter(rankData.xp);
-          var neededXp = kFormatter((rankData.level + 1) * 100);
-          var slideWidth =
-            (678 * ((rankData.xp * 100) / ((rankData.level + 1) * 100))) / 100;
+					const canvas = createCanvas(934, 382);
+					const ctx = canvas.getContext("2d");
 
-          const { registerFont, createCanvas, loadImage } = require("canvas");
+					const dots = await loadImage("./assets/dots.png");
+					ctx.drawImage(dots, 0, 0);
 
-          registerFont("./assets/Montserrat-Medium.ttf", {
-            family: "Montserrat",
-            weight: "normal",
-          });
-          registerFont("./assets/Montserrat-Bold.ttf", {
-            family: "Montserrat",
-            weight: "bold",
-          });
+					ctx.fillStyle =
+						client.rankcolour.get(getIdFromMention(args[0])) || "#2D9CDB";
+					ctx.fillRect(0, 0, 10, 382);
 
-          const canvas = createCanvas(934, 382);
-          const ctx = canvas.getContext("2d");
+					ctx.font = "bold 24px Montserrat";
+					ctx.fillStyle = "white";
+					ctx.textAlign = "right";
+					ctx.fillText("Level " + level + "   Rank " + rank, 934 - 47, 193);
+					ctx.textAlign = "start";
+					ctx.fillStyle = "white";
+					ctx.font = "bold 38px Montserrat";
+					ctx.fillText(
+						message.guild.members.cache.get(getIdFromMention(args[0])).user
+							.username,
+						51,
+						215
+					);
+					ctx.font = "normal 38px Montserrat";
+					ctx.fillStyle = "#999999";
+					ctx.fillText(
+						"#" +
+							message.guild.members.cache.get(getIdFromMention(args[0])).user
+								.discriminator,
+						60 +
+							ctx.measureText(
+								message.guild.members.cache.get(getIdFromMention(args[0])).user
+									.username
+							).width,
+						215
+					);
 
-          const dots = await loadImage("./assets/dots.png");
-          ctx.drawImage(dots, 0, 0);
+					ctx.fillStyle = "#cccccc";
+					ctx.font = "normal 24px Montserrat";
 
-          ctx.fillStyle = client.rankcolour.get(getIdFromMention(args[0])) || "#2D9CDB";
-          ctx.fillRect(0, 0, 10, 382);
+					ctx.textAlign = "right";
+					ctx.fillText(xp + `/` + neededXp, 934 - 47, 223);
+					ctx.textAlign = "start";
 
-          ctx.font = "bold 24px Montserrat";
-          ctx.fillStyle = "white";
-          ctx.textAlign = "right";
-          ctx.fillText("Level " + level + "   Rank " + rank, 934 - 47, 193);
-          ctx.textAlign = "start";
-          ctx.fillStyle = "white";
-          ctx.font = "bold 38px Montserrat";
-          ctx.fillText(message.guild.members.cache.get(getIdFromMention(args[0])).user.username, 51, 215);
-          ctx.font = "normal 38px Montserrat";
-          ctx.fillStyle = "#999999";
-          ctx.fillText(
-            "#" + message.guild.members.cache.get(getIdFromMention(args[0])).user.discriminator,
-            60 + ctx.measureText(message.guild.members.cache.get(getIdFromMention(args[0])).user.username).width,
-            215
-          );
+					ctx.fillStyle = "white";
+					roundRect(ctx, 51, 279, 836, 5, 4, true);
 
-          ctx.fillStyle = "#cccccc";
-          ctx.font = "normal 24px Montserrat";
+					ctx.fillStyle =
+						client.rankcolour.get(getIdFromMention(args[0])) || "#2D9CDB";
+					roundRect(ctx, 51, 279, slideWidth, 5, 4, true);
 
-          ctx.textAlign = "right";
-          ctx.fillText(xp + `/` + neededXp, 934 - 47, 223);
-          ctx.textAlign = "start";
+					const canvas2 = createCanvas(80, 80);
+					const ctx2 = canvas2.getContext("2d");
 
-          ctx.fillStyle = "white";
-          roundRect(ctx, 51, 279, 836, 5, 4, true);
+					const img = await loadImage(
+						message.guild.members.cache
+							.get(getIdFromMention(args[0]))
+							.user.displayAvatarURL({ format: "png" })
+					);
 
-          ctx.fillStyle = client.rankcolour.get(getIdFromMention(args[0])) || "#2D9CDB";
-          roundRect(ctx, 51, 279, slideWidth, 5, 4, true);
+					ctx2.drawImage(img, 0, 0, 80, 80);
 
-          const canvas2 = createCanvas(80, 80);
-          const ctx2 = canvas2.getContext("2d");  
+					ctx2.globalCompositeOperation = "destination-in";
+					ctx2.beginPath();
+					ctx2.arc(40, 40, 40, 0, 2 * Math.PI, true);
+					ctx2.fill();
 
-          const img = await loadImage(message.guild.members.cache.get(getIdFromMention(args[0])).user.displayAvatarURL({ format: 'png' }));
+					ctx.drawImage(canvas2, 51, 84);
 
-          ctx2.drawImage(img, 0, 0, 80, 80);
+					var base64Data = canvas
+						.toDataURL()
+						.replace(/^data:image\/png;base64,/, "");
 
-          ctx2.globalCompositeOperation = "destination-in";
-          ctx2.beginPath();
-          ctx2.arc(40, 40, 40, 0, 2 * Math.PI, true);
-          ctx2.fill();
+					var rankName = createUUID() + ".png";
 
-          ctx.drawImage(canvas2, 51, 84);
-
-          var base64Data = canvas
-            .toDataURL()
-            .replace(/^data:image\/png;base64,/, "");
-
-          var rankName = createUUID() + ".png";
-
-          require("fs").writeFile(rankName, base64Data, "base64", function(
-            err
-          ) {
-            message.channel.send({ files: [{ attachment: rankName, name: rankName }] }).then(() => {
-              require("fs").unlink(rankName, function(err) {});
-            });
-          });
-        	        }
-      } else {
-        message.channel.send(
-            "Bots can't be ranked."
-          );
-      }
-      }
-  }
-if(interaction) {
-client.api.interactions(interaction.id, interaction.token).callback.post({
-            data: {
-                type: 4,
-                data: {
-                  embeds: [ response ]
-                }
-            },
-        });
-}
+					require("fs").writeFile(
+						rankName,
+						base64Data,
+						"base64",
+						function (err) {
+							message.channel
+								.send({ files: [{ attachment: rankName, name: rankName }] })
+								.then(() => {
+									require("fs").unlink(rankName, function (err) {});
+								});
+						}
+					);
+				}
+			} else {
+				message.channel.send("Bots can't be ranked.");
+			}
+		}
+	}
+	if (interaction) {
+		client.api.interactions(interaction.id, interaction.token).callback.post({
+			data: {
+				type: 4,
+				data: {
+					embeds: [response],
+				},
+			},
+		});
+	}
 };
 
 exports.category = "Rank";
 exports.syntax = "rank [optional user]";
-exports.specialSlash = [{
-    name: 'User',
-    description: 'Description',
-    type: 6,
-    required: false
-  }];
+exports.specialSlash = [
+	{
+		name: "User",
+		description: "Description",
+		type: 6,
+		required: false,
+	},
+];

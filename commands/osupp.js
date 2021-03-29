@@ -4,52 +4,50 @@ const ojsama = require("ojsama");
 const fs = require("fs");
 const { uniqBy } = require("lodash");
 exports.run = (client, message, args, interaction) => {
-
-  var prefix = client.prefixes.get(message.guild.id);
+	var prefix = client.prefixes.get(message.guild.id);
 	if (args[0]) {
-			axios
-				.get(`https://osu.ppy.sh/osu/${args[0]}`)
-				.then((resp) => {
-					bruh(resp.data, message, args);
-				})
-				.catch((err) => {
-					message.channel.send({
-        embed: {
-          color: 0xc85151,
-          description:
-            "Invalid syntax | CORRECT SYNTAX: " +
-            prefix +
-            "osuPP [beatmap id]",
-          footer: {
-            text: `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
-            icon_url: message.author.displayAvatarURL(),
-          },
-        },
-      });
+		axios
+			.get(`https://osu.ppy.sh/osu/${args[0]}`)
+			.then((resp) => {
+				bruh(resp.data, message, args);
+			})
+			.catch((err) => {
+				message.channel.send({
+					embed: {
+						color: 0xc85151,
+						description:
+							"Invalid syntax | CORRECT SYNTAX: " +
+							prefix +
+							"osuPP [beatmap id]",
+						footer: {
+							text: `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
+							icon_url: message.author.displayAvatarURL(),
+						},
+					},
 				});
-	} else message.channel.send({
-        embed: {
-          color: 0xc85151,
-          description:
-            "Invalid syntax | CORRECT SYNTAX: " +
-            prefix +
-            "osuPP [beatmap id]",
-          footer: {
-            text: `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
-            icon_url: message.author.displayAvatarURL(),
-          },
-        },
-      });
-  if(interaction) {
-client.api.interactions(interaction.id, interaction.token).callback.post({
-            data: {
-                type: 4,
-                data: {
-                  embeds: [ response ]
-                }
-            },
-        });
-}
+			});
+	} else
+		message.channel.send({
+			embed: {
+				color: 0xc85151,
+				description:
+					"Invalid syntax | CORRECT SYNTAX: " + prefix + "osuPP [beatmap id]",
+				footer: {
+					text: `Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
+					icon_url: message.author.displayAvatarURL(),
+				},
+			},
+		});
+	if (interaction) {
+		client.api.interactions(interaction.id, interaction.token).callback.post({
+			data: {
+				type: 4,
+				data: {
+					embeds: [response],
+				},
+			},
+		});
+	}
 };
 
 exports.owner = true;
@@ -65,11 +63,11 @@ function bruh(map, message, args) {
 		.ppv2({ stars, acc_percent: args[2] ? parseFloat(args[2]) : 100 })
 		.toString();
 	var aaaa = uniqBy((args[1] ? args[1].toUpperCase() : "").match(/.{2}/g)).join(
-        ""
-    );
-    embed.setTitle(
-        `${parser.map.artist} - ${parser.map.title} ${aaaa ? "+" : ""}${aaaa}`
-    );
+		""
+	);
+	embed.setTitle(
+		`${parser.map.artist} - ${parser.map.title} ${aaaa ? "+" : ""}${aaaa}`
+	);
 	embed.setDescription(calc.slice(0, calc.indexOf(" (")));
 	embed.setFooter(
 		`Requested by ${message.author.username}#${message.author.discriminator} (${message.author.id})`,
@@ -80,9 +78,11 @@ function bruh(map, message, args) {
 }
 exports.category = "Utility";
 exports.syntax = "osuPP [beatmap id]";
-exports.specialSlash = [{
-    name: 'BeatmapID',
-    description: 'Description',
-    type: 3,
-    required: true
-  }];
+exports.specialSlash = [
+	{
+		name: "BeatmapID",
+		description: "Description",
+		type: 3,
+		required: true,
+	},
+];
